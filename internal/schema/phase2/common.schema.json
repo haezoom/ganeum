@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/pv/common.schema.json",
+  "$defs": {
+    "epochMillis": { "type": "integer", "minimum": 0 },
+    "idString": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,64}$" },
+    "uuidLower": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", "description": "가늠 강화: 소문자 UUID만 허용(온보딩 §3.3)" },
+    "header": {
+      "type": "object",
+      "required": ["schema_version", "id", "type", "rtu_id", "event_time", "ingest_time", "payload"],
+      "properties": {
+        "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+        "id": { "$ref": "#/$defs/uuidLower" },
+        "type": { "type": "string", "enum": ["telemetry", "info", "command", "result"] },
+        "rtu_id": { "$ref": "#/$defs/idString" },
+        "event_time": { "$ref": "#/$defs/epochMillis" },
+        "ingest_time": { "$ref": "#/$defs/epochMillis" },
+        "seq": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "resultState": { "type": "string", "enum": ["SUCCESS", "PARTIAL", "FAILURE"] },
+    "ackState": { "type": "string", "enum": ["IN_PROGRESS", "FAILURE"] },
+    "inverterResultState": { "type": "string", "enum": ["SUCCESS", "NO_RESPONSE", "FAILURE"] },
+    "failureReason": {
+      "type": "string",
+      "enum": ["COMM_FAILURE", "RTU_OFFLINE", "RESOURCE_NO_RESPONSE", "PROTECTION_TRIP", "PERMISSION_DENIED", "UNSUPPORTED_CONTROL", "PARTIAL_FAILURE", "TIMEOUT", "BAD_REQUEST", "INTERNAL_ERROR"]
+    }
+  }
+}

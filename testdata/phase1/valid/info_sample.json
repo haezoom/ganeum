@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "id": "a1b2c3d4-e5f6-4788-9a0b-1c2d3e4f5061",
+  "type": "info",
+  "rtu_id": "RTU-001",
+  "event_time": 1721600000000,
+  "ingest_time": 1721600000500,
+  "payload": {
+    "model": "HZ-Inv-X",
+    "firmware": "1.4.2",
+    "control_type": "CONTINUOUS",
+    "interval_sec": 5,
+    "inverters": [
+      { "id": "INV-1", "model": "X-3000", "capacity_w": 3000 }
+    ]
+  }
+}

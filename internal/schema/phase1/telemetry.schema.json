@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/pv/telemetry.schema.json",
+  "allOf": [{ "$ref": "common.schema.json#/$defs/header" }],
+  "properties": {
+    "type": { "const": "telemetry" },
+    "payload": {
+      "type": "object",
+      "required": ["is_control", "inverters"],
+      "properties": {
+        "is_control": { "type": "boolean" },
+        "inverters": {
+          "type": "array", "minItems": 1, "maxItems": 200,
+          "items": {
+            "type": "object",
+            "required": ["id", "status"],
+            "properties": {
+              "id": { "$ref": "common.schema.json#/$defs/idString" },
+              "ac_power_w": { "type": "integer" },
+              "energy_wh": { "type": "integer", "minimum": 0 },
+              "status": { "$ref": "common.schema.json#/$defs/inverterStatus" },
+              "reason": { "$ref": "common.schema.json#/$defs/reason" },
+              "reason_text": { "type": "string", "maxLength": 256 }
+            },
+            "allOf": [
+              { "if": { "properties": { "status": { "enum": ["STOP", "FAULT"] } } }, "then": { "required": ["reason"] } },
+              { "if": { "properties": { "status": { "not": { "const": "UNKNOWN" } } } }, "then": { "required": ["ac_power_w"] } }
+            ]
+          }
+        },
+        "pulse_energy_wh": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

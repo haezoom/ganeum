@@ -1,0 +1,108 @@
+{
+  "note": "가늠 Phase2 골든 테스트벡터 (01 부록 A.6). 각 벡터는 verify-command 로 검증 대상. canonical_hex 는 RFC 8785(JCS) 로 직렬화한 서명 대상 5필드 바이트(hex) — 양측 구현이 동일 바이트를 재현해야 서명이 일치. 테스트 키페어는 시험 전용(운영키 무관).",
+  "keys": {
+    "haezoom-ctrl-2026-07": "test_es256_pub.pem",
+    "haezoom-ctrl-ed-2026-07": "test_ed25519_pub.pem"
+  },
+  "vectors": [
+    {
+      "name": "valid_basic",
+      "file": "valid/valid_basic.json",
+      "alg": "ES256",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "accept",
+      "ttl_injected": false,
+      "canonical_hex": "7b226964223a2233663235303465302d346638392d343164332d396130632d303330356538326333333031222c226973737565645f6174223a313732313639323830303030302c226d61785f706f7765725f77223a3136333533302c227274755f6964223a22544553542d303031222c2274746c5f736563223a3132307d",
+      "canonical_text": "{\"id\":\"3f2504e0-4f89-41d3-9a0c-0305e82c3301\",\"issued_at\":1721692800000,\"max_power_w\":163530,\"rtu_id\":\"TEST-001\",\"ttl_sec\":120}",
+      "desc": "기본 command (ttl_sec 명시)"
+    },
+    {
+      "name": "valid_ttl_omitted",
+      "file": "valid/valid_ttl_omitted.json",
+      "alg": "ES256",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "accept",
+      "ttl_injected": true,
+      "canonical_hex": "7b226964223a2261316232633364342d653566362d346131622d386332642d303031313232333334343535222c226973737565645f6174223a313732313639323830303030302c226d61785f706f7765725f77223a35303030302c227274755f6964223a22544553542d303031222c2274746c5f736563223a3132307d",
+      "canonical_text": "{\"id\":\"a1b2c3d4-e5f6-4a1b-8c2d-001122334455\",\"issued_at\":1721692800000,\"max_power_w\":50000,\"rtu_id\":\"TEST-001\",\"ttl_sec\":120}",
+      "desc": "ttl_sec 생략 → 양측 120 주입 후 서명 (부록 A.3 재구성 규칙)"
+    },
+    {
+      "name": "valid_ed25519",
+      "file": "valid/valid_ed25519.json",
+      "alg": "EdDSA",
+      "trusted_key_id": "haezoom-ctrl-ed-2026-07",
+      "pubkey": "test_ed25519_pub.pem",
+      "expect": "accept",
+      "ttl_injected": false,
+      "canonical_hex": "7b226964223a2262326333643465352d663661372d346231632d396432652d313132323333343435353636222c226973737565645f6174223a313732313639323830303030302c226d61785f706f7765725f77223a3130303030302c227274755f6964223a22544553542d303031222c2274746c5f736563223a3330307d",
+      "canonical_text": "{\"id\":\"b2c3d4e5-f6a7-4b1c-9d2e-112233445566\",\"issued_at\":1721692800000,\"max_power_w\":100000,\"rtu_id\":\"TEST-001\",\"ttl_sec\":300}",
+      "desc": "Ed25519(EdDSA) 옵션 알고리즘"
+    },
+    {
+      "name": "expired_ref",
+      "file": "valid/expired_ref.json",
+      "alg": "ES256",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "accept",
+      "ttl_injected": false,
+      "canonical_hex": "7b226964223a2263336434653566362d613762382d346331642d396532662d323233333434353536363737222c226973737565645f6174223a313630303030303030303030302c226d61785f706f7765725f77223a38303030302c227274755f6964223a22544553542d303031222c2274746c5f736563223a36307d",
+      "canonical_text": "{\"id\":\"c3d4e5f6-a7b8-4c1d-9e2f-223344556677\",\"issued_at\":1600000000000,\"max_power_w\":80000,\"rtu_id\":\"TEST-001\",\"ttl_sec\":60}",
+      "desc": "참고: 서명은 유효하나 issued_at 이 과거(2020). 만료 판정은 런타임 검증 절차 step6(issued_at+ttl_sec, NTP 기준)이며 Part1 서명검증 범위 밖 — 따라서 서명검증은 accept."
+    },
+
+    {
+      "name": "bad_sig_tampered",
+      "file": "invalid/bad_sig_tampered.json",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "reject",
+      "reason": "PERMISSION_DENIED",
+      "step": "signature",
+      "desc": "서명 세그먼트 1문자 변조 → 서명 불일치"
+    },
+    {
+      "name": "bad_alg_none",
+      "file": "invalid/bad_alg_none.json",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "reject",
+      "reason": "PERMISSION_DENIED",
+      "step": "alg-allowlist",
+      "desc": "protected header alg:\"none\" → allowlist 위반 즉시 거부 (RFC 8725)"
+    },
+    {
+      "name": "bad_unknown_key_id",
+      "file": "invalid/bad_unknown_key_id.json",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "reject",
+      "reason": "PERMISSION_DENIED",
+      "step": "unknown-key-id",
+      "desc": "미지 key_id(haezoom-ctrl-OTHER) → fail-closed 거부"
+    },
+    {
+      "name": "bad_field_max_power",
+      "file": "invalid/bad_field_max_power.json",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "reject",
+      "reason": "PERMISSION_DENIED",
+      "step": "signature",
+      "desc": "서명 대상 5필드 중 max_power_w 변조 → canonical 불일치 → 서명 실패"
+    },
+    {
+      "name": "bad_field_id",
+      "file": "invalid/bad_field_id.json",
+      "trusted_key_id": "haezoom-ctrl-2026-07",
+      "pubkey": "test_es256_pub.pem",
+      "expect": "reject",
+      "reason": "PERMISSION_DENIED",
+      "step": "signature",
+      "desc": "서명 대상 5필드 중 header id 변조 → 명령·대상 위조 방지 → 서명 실패"
+    }
+  ]
+}

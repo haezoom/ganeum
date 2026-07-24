@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0",
+  "id": "3f2504e0-4f89-41d3-9a0c-0305e82c3301",
+  "type": "command",
+  "rtu_id": "TEST-001",
+  "event_time": 1721692800000,
+  "ingest_time": 1721692800100,
+  "payload": {
+    "max_power_w": 163530,
+    "issued_at": 1721692800000,
+    "ttl_sec": 120
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/pv/command.schema.json",
+  "allOf": [{ "$ref": "common.schema.json#/$defs/header" }],
+  "properties": {
+    "type": { "const": "command" },
+    "payload": {
+      "type": "object",
+      "required": ["max_power_w", "issued_at", "key_id", "signature"],
+      "properties": {
+        "max_power_w": { "type": "integer", "minimum": 0 },
+        "issued_at": { "$ref": "common.schema.json#/$defs/epochMillis" },
+        "ttl_sec": { "type": "integer", "minimum": 1, "maximum": 300 },
+        "key_id": { "$ref": "common.schema.json#/$defs/idString" },
+        "signature": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/pv/response.schema.json",
+  "type": "object",
+  "required": ["schema_version", "id", "type", "rtu_id", "req_id", "accepted", "result"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "id": { "$ref": "common.schema.json#/$defs/uuidLower" },
+    "type": { "type": "string", "const": "response" },
+    "rtu_id": { "$ref": "common.schema.json#/$defs/idString" },
+    "req_id": { "$ref": "common.schema.json#/$defs/uuidLower" },
+    "accepted": { "type": "boolean" },
+    "result": { "$ref": "common.schema.json#/$defs/ackState" },
+    "max_power_w": { "type": "integer", "minimum": 0 },
+    "received_at": { "$ref": "common.schema.json#/$defs/epochMillis" },
+    "failure_reason": { "$ref": "common.schema.json#/$defs/failureReason" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "accepted": { "const": false } }, "required": ["accepted"] },
+      "then": { "required": ["failure_reason"] }
+    },
+    {
+      "if": { "properties": { "accepted": { "const": true } }, "required": ["accepted"] },
+      "then": { "required": ["max_power_w"] }
+    }
+  ]
+}

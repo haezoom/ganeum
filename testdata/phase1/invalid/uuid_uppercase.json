@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "id": "3F2504E0-4F89-41D3-9A0C-0305E82C3301",
+  "type": "telemetry",
+  "rtu_id": "RTU-001",
+  "event_time": 1721600000000,
+  "ingest_time": 1721600000500,
+  "payload": {
+    "is_control": false,
+    "inverters": [
+      { "id": "INV-1", "ac_power_w": 1500, "status": "RUN" }
+    ]
+  }
+}

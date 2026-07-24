@@ -1,0 +1,14 @@
+{
+  "event_time": 1721692800000,
+  "id": "a1b2c3d4-e5f6-4a1b-8c2d-001122334455",
+  "ingest_time": 1721692800100,
+  "payload": {
+    "issued_at": 1721692800000,
+    "key_id": "haezoom-ctrl-2026-07",
+    "max_power_w": 50000,
+    "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC0yMDI2LTA3In0..7ylnXRM9tNJZYTGMi_orrTR9zNVtDLTW2RDwt9nruo5Tu7HCK1PVF1AdsTHsGX9bsOqSrdyMP7zBSEWL3GSz3g"
+  },
+  "rtu_id": "TEST-001",
+  "schema_version": "1.0",
+  "type": "command"
+}
