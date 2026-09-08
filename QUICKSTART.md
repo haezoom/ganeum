@@ -10,7 +10,18 @@
 - **가늠은 broker에 실제로 접속하기 전에, 협력사가 자사 PC·서버에서 telemetry·info payload의 표준 적합성을 오프라인으로 스스로 검증하는 도구**입니다.
 - 인터넷·해줌 인프라 연결 없이 로컬 JSON 파일만으로 동작합니다.
 - **가늠은 MQTT 클라이언트가 아닙니다.** broker 접속·publish·구독을 수행하지 않으며, 실제 stg publish(온보딩 절차 ⑥)는 협력사의 자체 MQTT 클라이언트로 별도 수행합니다.
-- 가늠이 통과시킨 payload라도, 실제 발행 주기(1분 이내)·MQTT 5.0/TLS 1.3 연결·`rtu_id` 매핑 등 온보딩 절차의 다른 항목은 별도로 충족해야 합니다.
+- 가늠이 통과시킨 payload라도, 다음은 별도로 충족해야 합니다.
+  - 실제 발행 주기(1분 이내)·MQTT 5.0/TLS 1.3 연결·`rtu_id` 매핑 등 온보딩 절차의 다른 항목
+  - **검증한 payload와 broker에 실제로 발행되는 바이트가 동일한지.** 가늠은 건네받은 파일만 읽습니다 — 그 파일이 실제로 발행되는 바이트와 같은지는 보지 않습니다. 직렬화 계층이나 전송 래퍼가 한 겹 더 감싸면 가늠은 전건 통과인데 broker에 도착하는 바이트는 규격을 벗어납니다.
+
+**실제 발행 바이트를 그대로 검증하는 방법.** publish 호출에 넘기는 바로 그 값을 발행 직전에 파일로 남기고, 그 파일을 §6 자기시험에 넣습니다. 그 값을 만들기 전의 객체를 저장하면 같은 빈틈이 그대로 남습니다.
+
+```python
+# publish 직전 — payload 는 client.publish(topic, payload) 에 넘기는 그 값
+open("out/%d.json" % int(time.time() * 1000), "wb").write(
+    payload if isinstance(payload, bytes) else payload.encode("utf-8"))
+client.publish(topic, payload)
+```
 
 ## 2. 패키지 구성
 
@@ -96,6 +107,17 @@ PASS  samples/info_sample.json  (type=info)
 ```
 
 이 단계가 실패하면 패키지 손상 또는 잘못된 바이너리 사용 가능성이 있으니 §3 무결성 검증부터 다시 확인합니다.
+
+### 골든 벡터(`testdata/`)는 배포 패키지에 없습니다
+
+이 패키지의 `samples/` 에는 통과 예시 2건만 들어 있습니다. **통과해야 하는 것과 실패해야 하는 것을 모두 담은 골든 벡터(`testdata/`)는 배포 패키지에 포함되지 않으며, 저장소에만 있습니다.**
+
+<https://github.com/haezoom/ganeum/tree/v0.1.0/testdata>
+
+- `testdata/phase1/valid/` — 통과해야 하는 벡터 4건
+- `testdata/phase1/invalid/` — 실패해야 하는 벡터 12건 (단위·타입·시각 형식·`rtu_id` 문자셋 등)
+
+자사 검증 파이프라인이 **실패해야 할 것을 실제로 실패시키는지** 확인할 때 씁니다. 통과 벡터만으로는 그것을 알 수 없습니다.
 
 ## 6. 자사 payload 자기시험
 
