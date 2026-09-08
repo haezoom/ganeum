@@ -2,6 +2,7 @@
 
 > 본 문서는 해줌 stg 온보딩 절차(Phase1 모니터링) 5단계 "로컬 자기시험"을 위한 **가늠** CLI 사용 안내입니다.
 > 대상 범위는 **Phase1(telemetry·info)** 뿐입니다. 제어(Phase2) 기능은 이 패키지에 포함되지 않습니다.
+> **문서판**: 2026-09-08 (§1에 실제 발행 바이트 확인 항목, §5에 골든 벡터 안내를 추가했습니다). 이전 판은 2026-07-24입니다.
 
 ---
 
@@ -14,14 +15,26 @@
   - 실제 발행 주기(1분 이내)·MQTT 5.0/TLS 1.3 연결·`rtu_id` 매핑 등 온보딩 절차의 다른 항목
   - **검증한 payload와 broker에 실제로 발행되는 바이트가 동일한지.** 가늠은 건네받은 파일만 읽습니다 — 그 파일이 실제로 발행되는 바이트와 같은지는 보지 않습니다. 직렬화 계층이나 전송 래퍼가 한 겹 더 감싸면 가늠은 전건 통과인데 broker에 도착하는 바이트는 규격을 벗어납니다.
 
-**실제 발행 바이트를 그대로 검증하는 방법.** publish 호출에 넘기는 바로 그 값을 발행 직전에 파일로 남기고, 그 파일을 §6 자기시험에 넣습니다. 그 값을 만들기 전의 객체를 저장하면 같은 빈틈이 그대로 남습니다.
+**실제 발행 바이트를 그대로 검증하는 두 가지 방법.**
+
+**① 자기 토픽을 구독해 받은 바이트를 검증합니다 (권장).** stg에서 자사 `v1/{vendor}/{rtu_id}` 토픽은 구독도 허용됩니다(온보딩 절차 §3.2). 발행한 메시지를 스스로 받아 그 바이트를 파일로 저장하고 §6 자기시험에 넣습니다. 발행 경로 어디에서 무엇이 덧씌워지든 **broker에 도착한 바이트 그대로**를 보게 되므로, 직렬화·전송 계층을 모두 지나온 결과를 검사합니다. 언어·라이브러리와 무관하게 쓸 수 있습니다.
+
+**② publish 직전 값을 파일로 남깁니다.** MQTT 라이브러리에 실제로 건네는 바로 그 값을 저장합니다. 저장 지점이 자체 전송 헬퍼 **안쪽이 아니라 바깥**이면 그 헬퍼가 덧씌우는 부분은 잡히지 않으므로, `client.publish(...)`를 **호출하는 바로 그 줄** 앞에서 저장해야 합니다.
 
 ```python
-# publish 직전 — payload 는 client.publish(topic, payload) 에 넘기는 그 값
-open("out/%d.json" % int(time.time() * 1000), "wb").write(
-    payload if isinstance(payload, bytes) else payload.encode("utf-8"))
+import os, time
+
+os.makedirs("out", exist_ok=True)
+# payload 는 client.publish(topic, payload) 에 넘기는 바로 그 값
+# 파일 이름에 토픽을 함께 넣습니다 — 같은 밀리초에 두 건을 발행하면
+# 이름이 겹쳐 한 건이 조용히 덮어써지고, 전수 검증에서 표본이 사라집니다.
+name = "out/%d_%s.json" % (int(time.time() * 1000), topic.replace("/", "_"))
+with open(name, "wb") as f:
+    f.write(payload if isinstance(payload, bytes) else payload.encode("utf-8"))
 client.publish(topic, payload)
 ```
+
+두 방법 중 하나로 모은 파일을 §6의 `validate --profile phase1`에 넣어 전건 통과하는지 확인합니다.
 
 ## 2. 패키지 구성
 
@@ -121,7 +134,7 @@ PASS  samples/info_sample.json  (type=info)
 
 ## 6. 자사 payload 자기시험
 
-자사 RTU/게이트웨이가 생성한 telemetry·info JSON payload를 디렉토리(`./out` 등)에 모아 검증합니다.
+자사 RTU/게이트웨이가 **broker에 실제로 발행하는 바이트 그대로**(§1의 방법으로 남긴 파일)를 디렉토리(`./out` 등)에 모아 검증합니다. 검증용으로 따로 만든 payload를 넣으면, 그 사이에서 한 겹 더 감싸지거나 필드가 덧붙는 경우를 가늠이 잡지 못합니다.
 
 ```bash
 # 디렉토리 전수 검사
@@ -146,7 +159,7 @@ PASS  samples/info_sample.json  (type=info)
 | `1` | 하나 이상 검증 실패 |
 | `2` | 사용법/입력 오류 (잘못된 플래그, 없는 경로 등) |
 
-온보딩 절차 ⑤(로컬 자기시험) 통과 기준은 telemetry·info **전수 스키마 검증 통과율 100%**(exit `0`)입니다. 실패 항목은 출력된 `path`·`rule`·안내 문구를 참고해 수정 후 재시험합니다.
+온보딩 절차 ⑤(로컬 자기시험) 통과 기준은 **실제 발행 바이트에 대해** telemetry·info **전수 스키마 검증 통과율 100%**(exit `0`)입니다. 실패 항목은 출력된 `path`·`rule`·안내 문구를 참고해 수정 후 재시험합니다.
 
 ## 7. 자주 걸리는 항목 및 추가 문의
 
