@@ -8,7 +8,7 @@
   detached JWS(ES256/EdDSA) **서명 검증·참조 서명** (제어 표준 01 §5·부록 A, 04 §4~6) — 아래 별도 절.
 
 - JSON Schema 엔진: `github.com/santhosh-tekuri/jsonschema/v6` (Draft 2020-12)
-- 스키마 3종(common/telemetry/info)은 바이너리에 내장(`embed.FS`)되어 별도 파일이 필요 없습니다.
+- Phase1 스키마 3종과 Phase2 스키마 4종은 바이너리에 내장(`embed.FS`)되어 별도 파일이 필요 없습니다.
 
 ## 설치 / 빌드
 
@@ -33,8 +33,9 @@ make build-all      # dist/ 아래 darwin/linux/windows 바이너리 생성
 ```
 ganeum validate [옵션] <경로...>
   <경로>            .json 파일, 디렉토리(재귀 .json 전수), 또는 '-'(stdin)
-  --profile string  검증 프로필 (기본 phase1; 현재 phase1만 지원)
-  --type string     telemetry|info|auto (기본 auto: 메시지의 type 필드로 판별)
+  --profile string  검증 프로필 phase1|phase2 (기본 phase1)
+  --type string     [phase1] telemetry|info|auto (기본 auto: 메시지의 type 필드로 판별)
+  --kind string     [phase2] command|response|result|auto (기본 auto)
   --strict          미지 필드 등 약한 warn 을 error 로 승격
   --format string   text(기본, 사람용) | json(기계용 NDJSON)
   -q, --quiet       통과 항목 생략, 실패만 출력
@@ -109,12 +110,12 @@ FAIL  out/telemetry_0002.json
 
 ```bash
 make vet     # go vet ./...
-make test    # go test ./...  (testdata/phase1 의 valid/invalid 케이스 검증)
-make smoke   # 바이너리 스모크 (valid→0, invalid→1)
+make test    # go test ./...  (Phase1·Phase2 테스트)
+make smoke   # 빌드 후 Phase1 검증 및 Phase2 서명 CLI 스모크
 ```
 
-테스트 데이터는 `testdata/phase1/valid/`(유효)·`testdata/phase1/invalid/`(위반)에 있으며,
-각 위반 파일은 파일명이 트리거하는 규칙을 나타냅니다.
+Phase1 벡터는 `testdata/phase1/valid/`(유효)·`testdata/phase1/invalid/`(위반)에,
+Phase2 벡터는 `testdata/phase2/vectors/`에 있습니다. 각 위반 파일명은 테스트하는 규칙을 나타냅니다.
 
 ## Phase2 — 제어 conformance (자기시험)
 
