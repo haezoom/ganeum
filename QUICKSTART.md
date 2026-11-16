@@ -1,14 +1,14 @@
-# 가늠 (ganeum) QUICKSTART — Phase1 협력사 배포판
+# 가늠 (ganeum) QUICKSTART — 협력사 자기시험
 
-> 본 문서는 해줌 stg 온보딩 절차(Phase1 모니터링) 5단계 "로컬 자기시험"을 위한 **가늠** CLI 사용 안내입니다.
-> 대상 범위는 **Phase1(telemetry·info)** 뿐입니다. 제어(Phase2) 기능은 이 패키지에 포함되지 않습니다.
-> **문서판**: 2026-09-08 (§1에 실제 발행 바이트 확인 항목, §5에 골든 벡터 안내를 추가했습니다). 이전 판은 2026-07-24입니다.
+> 가늠 CLI는 **Phase1(telemetry·info)** 과 **Phase2(command/response/result 및 command 서명)** 를 모두 지원합니다.
+> 본 QUICKSTART는 해줌 stg 온보딩 절차의 Phase1 모니터링 자기시험을 중심으로 설명하며, Phase2 사용 예도 §6에 안내합니다.
+> **문서판**: 2026-11-16 (Phase1·Phase2 지원 범위와 Phase2 사용 예를 반영했습니다).
 
 ---
 
 ## 1. 가늠이 무엇인가 / 아닌가
 
-- **가늠은 broker에 실제로 접속하기 전에, 협력사가 자사 PC·서버에서 telemetry·info payload의 표준 적합성을 오프라인으로 스스로 검증하는 도구**입니다.
+- **가늠은 broker 접속 전에 로컬에서 표준 적합성을 검증하는 도구**입니다. Phase1에서는 `telemetry`·`info` payload를, Phase2에서는 `command`·`response`·`result` 메시지를 검증하고 command 서명을 확인할 수 있습니다.
 - 인터넷·해줌 인프라 연결 없이 로컬 JSON 파일만으로 동작합니다.
 - **가늠은 MQTT 클라이언트가 아닙니다.** broker 접속·publish·구독을 수행하지 않으며, 실제 stg publish(온보딩 절차 ⑥)는 협력사의 자체 MQTT 클라이언트로 별도 수행합니다.
 - 가늠이 통과시킨 payload라도, 다음은 별도로 충족해야 합니다.
@@ -147,9 +147,19 @@ PASS  samples/info_sample.json  (type=info)
 ./bin/ganeum_linux_amd64 validate --profile phase1 --format json ./out | jq -c 'select(.ok==false)'
 ```
 
-- `--profile phase1` : Phase1(telemetry·info) 검증 프로필. 현재 배포판은 이 프로필만 사용합니다.
+- `--profile phase1` : Phase1(telemetry·info) 검증 프로필.
+- `--profile phase2` : Phase2 제어 메시지 검증 프로필. `--kind auto`로 `command`·`response`·`result`를 판별하거나 kind를 지정합니다.
 - `--strict` : 스키마에 없는 추가 필드(warn)를 error로 승격 — 필드명 오타를 조기에 잡아냅니다.
 - `--format json` : 사람이 읽는 text 대신 기계 판독용 NDJSON을 출력합니다. `jq`로 실패건만 필터링하면 CI에 연동하기 좋습니다.
+
+Phase2 메시지 검증과 command 서명 검증은 다음처럼 실행합니다. 서명 검증에는 신뢰할 공개키와 그 `key_id`를 지정합니다.
+
+```bash
+./bin/ganeum_linux_amd64 validate --profile phase2 --kind auto ./control_out
+./bin/ganeum_linux_amd64 verify-command --pubkey pub.pem --key-id haezoom-ctrl-2026-07 cmd.json
+```
+
+`verify-command`의 구체적인 서명 규격과 테스트 절차는 [README.md](./README.md)의 Phase2 안내를 참고하십시오.
 
 ### 종료코드
 
@@ -169,4 +179,4 @@ PASS  samples/info_sample.json  (type=info)
 
 ---
 
-**범위 안내**: 본 패키지는 Phase1(모니터링: telemetry·info) 자기시험 전용입니다. 제어(Phase2: command/response/result, 서명검증)는 포함되지 않으며, 별도 온보딩 절차로 안내됩니다. broker 실접속 정보(호스트·포트·자격증명)는 온보딩 신청 접수 후 별도 안내됩니다.
+**범위 안내**: 가늠 CLI는 Phase1과 Phase2 자기시험을 지원하지만 broker 실접속·publish, mTLS 실인증은 수행하지 않습니다. 본 문서의 온보딩 단계는 Phase1 모니터링 기준이며, 실제 제어 운영과 broker 실접속 정보는 별도 온보딩 절차를 따릅니다.
