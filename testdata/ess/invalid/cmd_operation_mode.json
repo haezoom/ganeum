@@ -1,0 +1,21 @@
+{
+  "event_time": 1781000000900,
+  "id": "b3f1c2a8-9d4e-4f7a-b1c2-3e5f7a9b0c1d",
+  "ingest_time": 1781000000900,
+  "payload": {
+    "direction": "DISCHARGE",
+    "hold_sec": 900,
+    "issued_at": 1781000000900,
+    "key_id": "haezoom-ctrl-test-0001",
+    "mode": "IMMEDIATE",
+    "power_w": 200000,
+    "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..7xBv1Cvh3Vo0O5yrEQ7KtWx2tIm6FEwQZVBbuk3SYfxpC3wzJX6VaOnAUCy1f4ZA0abM1r4sZypEuqQh5IfukQ",
+    "soc_max_pct": 95,
+    "soc_min_pct": 10,
+    "ttl_sec": 120,
+    "operation_mode": "AUTO"
+  },
+  "rtu_id": "ESS-1",
+  "schema_version": "0.2",
+  "type": "command"
+}

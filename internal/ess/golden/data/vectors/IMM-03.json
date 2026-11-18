@@ -1,0 +1,53 @@
+{
+  "case_id": "IMM-03",
+  "title": "IMMEDIATE — override_polarity_gap=false 를 명시 전송, soc_min_pct 만 전송",
+  "mode": "IMMEDIATE",
+  "type1_ttl_sec_present": true,
+  "type2_present": [
+    "soc_min_pct",
+    "override_polarity_gap"
+  ],
+  "type2_absent": [
+    "soc_max_pct",
+    "hold_sec"
+  ],
+  "notes": "**값이 false 여도 키가 존재하므로 서명 body 에 포함**됩니다(A.3 규칙 3). false 를 '없는 것과 같다'고 처리하는 구현은 이 케이스에서 서명이 깨집니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "3f407394-442c-4fa9-ba77-9e64401c1282",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "CHARGE",
+      "power_w": 100000,
+      "soc_min_pct": 15,
+      "override_polarity_gap": false,
+      "ttl_sec": 60,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..vd8Oll-_ebPYO8FFOs4TanL-zrkh4-EMoRwYSjd1nPhZLIBaZyNc5R-FFjHpjz8B3eU-8G2AdIFGk03GYYPNqQ"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "3f407394-442c-4fa9-ba77-9e64401c1282",
+      "rtu_id": "ESS-1",
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "direction": "CHARGE",
+      "power_w": 100000,
+      "ttl_sec": 60,
+      "soc_min_pct": 15,
+      "override_polarity_gap": false
+    },
+    "canonical": "{\"direction\":\"CHARGE\",\"id\":\"3f407394-442c-4fa9-ba77-9e64401c1282\",\"issued_at\":1781000000900,\"mode\":\"IMMEDIATE\",\"override_polarity_gap\":false,\"power_w\":100000,\"rtu_id\":\"ESS-1\",\"soc_min_pct\":15,\"ttl_sec\":60}",
+    "canonical_sha256": "b10aa2c4716eba824810813730fc544a65ed27b5dcb1c08fd2d3965835c0f025",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJkaXJlY3Rpb24iOiJDSEFSR0UiLCJpZCI6IjNmNDA3Mzk0LTQ0MmMtNGZhOS1iYTc3LTllNjQ0MDFjMTI4MiIsImlzc3VlZF9hdCI6MTc4MTAwMDAwMDkwMCwibW9kZSI6IklNTUVESUFURSIsIm92ZXJyaWRlX3BvbGFyaXR5X2dhcCI6ZmFsc2UsInBvd2VyX3ciOjEwMDAwMCwicnR1X2lkIjoiRVNTLTEiLCJzb2NfbWluX3BjdCI6MTUsInR0bF9zZWMiOjYwfQ",
+    "jws_signature_b64u": "vd8Oll-_ebPYO8FFOs4TanL-zrkh4-EMoRwYSjd1nPhZLIBaZyNc5R-FFjHpjz8B3eU-8G2AdIFGk03GYYPNqQ"
+  }
+}

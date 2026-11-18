@@ -1,0 +1,56 @@
+{
+  "case_id": "IMM-02",
+  "title": "IMMEDIATE — 선택 서명 필드 4종 전부 전송(override_polarity_gap=true)",
+  "mode": "IMMEDIATE",
+  "type1_ttl_sec_present": true,
+  "type2_present": [
+    "soc_min_pct",
+    "soc_max_pct",
+    "hold_sec",
+    "override_polarity_gap"
+  ],
+  "type2_absent": [],
+  "notes": "유형 ② 최대 집합. ttl_sec 는 IMMEDIATE 상한 300 입니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "79ad7bf1-f464-4787-81b4-1c9d38c4108a",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "DISCHARGE",
+      "power_w": 250000,
+      "soc_min_pct": 10,
+      "soc_max_pct": 95,
+      "hold_sec": 900,
+      "override_polarity_gap": true,
+      "ttl_sec": 300,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..nY2iEykOxhyr7gzZV0panv5p3c5YGtTWFG521jhuaxcgFDINFWOdMk8VFUykBwzDV8CsDdsSNg0e4bxrxyWb_Q"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "79ad7bf1-f464-4787-81b4-1c9d38c4108a",
+      "rtu_id": "ESS-1",
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "direction": "DISCHARGE",
+      "power_w": 250000,
+      "ttl_sec": 300,
+      "soc_min_pct": 10,
+      "soc_max_pct": 95,
+      "hold_sec": 900,
+      "override_polarity_gap": true
+    },
+    "canonical": "{\"direction\":\"DISCHARGE\",\"hold_sec\":900,\"id\":\"79ad7bf1-f464-4787-81b4-1c9d38c4108a\",\"issued_at\":1781000000900,\"mode\":\"IMMEDIATE\",\"override_polarity_gap\":true,\"power_w\":250000,\"rtu_id\":\"ESS-1\",\"soc_max_pct\":95,\"soc_min_pct\":10,\"ttl_sec\":300}",
+    "canonical_sha256": "2acce09f9f83a902b2ccce805470a174c5ba0da028f7a025f6bc1fb1fba8af45",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJkaXJlY3Rpb24iOiJESVNDSEFSR0UiLCJob2xkX3NlYyI6OTAwLCJpZCI6Ijc5YWQ3YmYxLWY0NjQtNDc4Ny04MWI0LTFjOWQzOGM0MTA4YSIsImlzc3VlZF9hdCI6MTc4MTAwMDAwMDkwMCwibW9kZSI6IklNTUVESUFURSIsIm92ZXJyaWRlX3BvbGFyaXR5X2dhcCI6dHJ1ZSwicG93ZXJfdyI6MjUwMDAwLCJydHVfaWQiOiJFU1MtMSIsInNvY19tYXhfcGN0Ijo5NSwic29jX21pbl9wY3QiOjEwLCJ0dGxfc2VjIjozMDB9",
+    "jws_signature_b64u": "nY2iEykOxhyr7gzZV0panv5p3c5YGtTWFG521jhuaxcgFDINFWOdMk8VFUykBwzDV8CsDdsSNg0e4bxrxyWb_Q"
+  }
+}

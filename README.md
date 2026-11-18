@@ -6,6 +6,8 @@
 - **Phase1(모니터링)**: `telemetry`·`info` JSON payload 스키마 검증 (모니터링 표준 §5·§6·§9)
 - **Phase2(제어)**: `command`/`response`/`result` 스키마 검증 + 다운링크 명령의
   detached JWS(ES256/EdDSA) **서명 검증·참조 서명** (제어 표준 01 §5·부록 A, 04 §4~6) — 아래 별도 절.
+- **ESS 프로필 (DRAFT)**: ESS 제어·모니터링 표준 v0.2 의 메시지 5종 검증·서명 검증·참조 EMS 판정 —
+  `ganeum ess ...`. 자세한 내용은 [`docs/ess/README.md`](docs/ess/README.md).
 
 - JSON Schema 엔진: `github.com/santhosh-tekuri/jsonschema/v6` (Draft 2020-12)
 - Phase1 스키마 3종과 Phase2 스키마 4종은 바이너리에 내장(`embed.FS`)되어 별도 파일이 필요 없습니다.
@@ -33,7 +35,7 @@ make build-all      # dist/ 아래 darwin/linux/windows 바이너리 생성
 ```
 ganeum validate [옵션] <경로...>
   <경로>            .json 파일, 디렉토리(재귀 .json 전수), 또는 '-'(stdin)
-  --profile string  검증 프로필 phase1|phase2 (기본 phase1)
+  --profile string  검증 프로필 phase1|phase2|ess (기본 phase1; ess 는 'ganeum ess validate' 와 동일)
   --type string     [phase1] telemetry|info|auto (기본 auto: 메시지의 type 필드로 판별)
   --kind string     [phase2] command|response|result|auto (기본 auto)
   --strict          미지 필드 등 약한 warn 을 error 로 승격
@@ -41,6 +43,10 @@ ganeum validate [옵션] <경로...>
   -q, --quiet       통과 항목 생략, 실패만 출력
 
 ganeum version      버전·빌드정보
+
+ganeum ess <서브커맨드>   ESS 표준 v0.2 프로필 [DRAFT] (validate·verify-command·sign-command·
+                          canonical·golden·respond·gen-key·keystore·sample·schema)
+                          — 'ganeum ess help', docs/ess/README.md
 ```
 
 ### 종료코드
@@ -174,6 +180,20 @@ ganeum verify-command --format json --pubkey pub.pem --key-id haezoom-ctrl-2026-
 
 > `expired_ref`는 서명 자체는 유효하되 `issued_at`이 과거입니다. **만료 판정은 런타임 검증 절차
 > step6(`issued_at`+`ttl_sec`, NTP 기준)** 이며 Part1 서명검증 범위 밖이라 서명검증은 accept 입니다.
+
+## ESS 프로필 (DRAFT)
+
+ESS 제어·모니터링 표준 v0.2 용 검증은 `ganeum ess` 아래에 있습니다. 태양광과 스키마·서명 대상 필드가 달라
+별도 패키지(`internal/ess/`)로 구현했고, 같은 바이너리로 배포합니다.
+
+```bash
+ganeum ess golden                                    # ESS 골든 벡터 v0.2: PASS 16 / FAIL 0
+ganeum ess validate --info info.json telemetry.json  # 스키마 + R-1~R-12 + info 대조
+ganeum ess verify-command --keystore keystore.json --now now command.json
+ganeum ess respond --keystore keystore.json --info info.json command.json   # 표준 EMS ACK 판정
+```
+
+사용법 [`docs/ess/QUICKSTART.md`](docs/ess/QUICKSTART.md) · 범위와 협의 중 항목 [`docs/ess/DRAFT_NOTES.md`](docs/ess/DRAFT_NOTES.md)
 
 ## 범위 밖 (가늠 아님)
 

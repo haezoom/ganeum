@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.2",
+  "id": "002e131d-a679-470d-a461-67e4dad9b0b0",
+  "type": "result",
+  "rtu_id": "ESS-1",
+  "event_time": 1781000060000,
+  "ingest_time": 1781000060050,
+  "payload": {
+    "req_id": "b3f1c2a8-9d4e-4f7a-b1c2-3e5f7a9b0c1d",
+    "result": "SUCCESS",
+    "target_direction": "DISCHARGE",
+    "target_power_w": 200000,
+    "reached_direction": "DISCHARGE",
+    "reached_power_w": 198500,
+    "soc_pct": 60,
+    "latency_ms": 39000
+  }
+}

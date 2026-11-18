@@ -1,0 +1,289 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/ess/telemetry.schema.json",
+  "allOf": [
+    {
+      "$ref": "common.schema.json#/$defs/header"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "telemetry"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "is_control",
+        "pcs",
+        "battery"
+      ],
+      "properties": {
+        "is_control": {
+          "type": "boolean"
+        },
+        "pcs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "status"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/$defs/idString"
+              },
+              "power_w": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "충·방전 전력 크기(W, 정수, 양수). status=UNKNOWN일 때만 생략 가능"
+              },
+              "direction": {
+                "$ref": "common.schema.json#/$defs/direction"
+              },
+              "status": {
+                "$ref": "common.schema.json#/$defs/pcsStatus"
+              },
+              "reason": {
+                "$ref": "common.schema.json#/$defs/reason"
+              },
+              "reason_text": {
+                "type": "string",
+                "maxLength": 256
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "STOP",
+                        "FAULT"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "reason"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "not": {
+                        "const": "UNKNOWN"
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "power_w",
+                    "direction"
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        "battery": {
+          "type": "object",
+          "required": [
+            "soc_pct"
+          ],
+          "properties": {
+            "soc_pct": {
+              "$ref": "common.schema.json#/$defs/pct"
+            },
+            "soc_permille": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000,
+              "description": "예약 — SoC 천분율(0~1000). v0.2에서는 사용하지 않습니다. 소수 해상도가 필요한 자원을 위해 이름만 예약하며, 사용 여부·규칙은 협의 후 확정합니다"
+            },
+            "soh_pct": {
+              "$ref": "common.schema.json#/$defs/pct"
+            },
+            "avail_charge_w": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "현재 충전 가능 출력 상한(W, 정수). info.bms_capabilities에 신고한 자원은 필수(§7 스키마 밖 규칙)"
+            },
+            "avail_discharge_w": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "현재 방전 가능 출력 상한(W, 정수). info.bms_capabilities에 신고한 자원은 필수(§7 스키마 밖 규칙)"
+            },
+            "rack_total": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rack_online": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "cell_v_max_mv": {
+              "type": "integer"
+            },
+            "cell_v_min_mv": {
+              "type": "integer"
+            },
+            "cell_t_max_c": {
+              "type": "integer"
+            },
+            "cell_t_min_c": {
+              "type": "integer"
+            },
+            "bms_alarm": {
+              "type": "object",
+              "required": [
+                "code"
+              ],
+              "properties": {
+                "code": {
+                  "$ref": "common.schema.json#/$defs/bmsAlarmCode"
+                },
+                "text": {
+                  "type": "string",
+                  "maxLength": 256
+                }
+              }
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "required": [
+                  "avail_charge_w"
+                ]
+              },
+              "then": {
+                "required": [
+                  "avail_discharge_w"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "avail_discharge_w"
+                ]
+              },
+              "then": {
+                "required": [
+                  "avail_charge_w"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "rack_total"
+                ]
+              },
+              "then": {
+                "required": [
+                  "rack_online"
+                ]
+              }
+            },
+            {
+              "if": {
+                "required": [
+                  "rack_online"
+                ]
+              },
+              "then": {
+                "required": [
+                  "rack_total"
+                ]
+              }
+            }
+          ]
+        },
+        "ems": {
+          "type": "object",
+          "required": [
+            "operation_mode"
+          ],
+          "description": "EMS 운전상태 readback. 제공 가능 여부는 [권장안 · 협의 필요 — 협력사 확인]이며, 블록 자체는 선택입니다",
+          "properties": {
+            "operation_mode": {
+              "$ref": "common.schema.json#/$defs/operationMode"
+            },
+            "active_slot": {
+              "type": "object",
+              "required": [
+                "start_min",
+                "end_min",
+                "direction",
+                "power_w"
+              ],
+              "description": "현재 수행 중인 등록 스케줄 슬롯. 수행 중인 슬롯이 없으면 생략합니다",
+              "properties": {
+                "start_min": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1440
+                },
+                "end_min": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 1440
+                },
+                "direction": {
+                  "$ref": "common.schema.json#/$defs/direction"
+                },
+                "power_w": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        },
+        "energy": {
+          "type": "object",
+          "properties": {
+            "charged_wh": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "discharged_wh": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "pv": {
+          "type": "object",
+          "required": [
+            "power_w"
+          ],
+          "properties": {
+            "power_w": {
+              "type": "integer"
+            },
+            "export_w": {
+              "type": "integer"
+            },
+            "energy_wh": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "export_wh": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

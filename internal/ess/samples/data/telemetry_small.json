@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.2",
+  "id": "21a8f23a-7b47-4f99-961f-4591781fb508",
+  "type": "telemetry",
+  "rtu_id": "ESS-SMALL-1",
+  "event_time": 1781000000000,
+  "ingest_time": 1781000000300,
+  "payload": {
+    "is_control": false,
+    "pcs": [
+      {
+        "id": "PCS-1",
+        "power_w": 0,
+        "direction": "IDLE",
+        "status": "IDLE"
+      }
+    ],
+    "battery": {
+      "soc_pct": 58
+    }
+  }
+}

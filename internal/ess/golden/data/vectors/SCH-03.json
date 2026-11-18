@@ -1,0 +1,76 @@
+{
+  "case_id": "SCH-03",
+  "title": "SCHEDULE — date 만 전송(soc_* 생략)",
+  "mode": "SCHEDULE",
+  "type1_ttl_sec_present": true,
+  "type2_present": [
+    "date"
+  ],
+  "type2_absent": [
+    "soc_min_pct",
+    "soc_max_pct"
+  ],
+  "notes": "date 는 문자열이므로 JCS 문자열 규칙이 적용됩니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "22f7f1b8-f06c-4038-9372-7dec9acf0e46",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 0,
+          "end_min": 360,
+          "direction": "CHARGE",
+          "power_w": 100000
+        },
+        {
+          "start_min": 1080,
+          "end_min": 1320,
+          "direction": "DISCHARGE",
+          "power_w": 150000
+        }
+      ],
+      "date": "2026-12-31",
+      "ttl_sec": 3600,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..0IW1RL8ECpMJB9rWxpZThFSUZB_9ksNcIIS0NU7LwJdlX1ga2R03rGYPsm7hfGAuww0KM_suh5y7v8zRbpOQPA"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "22f7f1b8-f06c-4038-9372-7dec9acf0e46",
+      "rtu_id": "ESS-1",
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 0,
+          "end_min": 360,
+          "direction": "CHARGE",
+          "power_w": 100000
+        },
+        {
+          "start_min": 1080,
+          "end_min": 1320,
+          "direction": "DISCHARGE",
+          "power_w": 150000
+        }
+      ],
+      "ttl_sec": 3600,
+      "date": "2026-12-31"
+    },
+    "canonical": "{\"date\":\"2026-12-31\",\"id\":\"22f7f1b8-f06c-4038-9372-7dec9acf0e46\",\"issued_at\":1781000000900,\"mode\":\"SCHEDULE\",\"rtu_id\":\"ESS-1\",\"slots\":[{\"direction\":\"CHARGE\",\"end_min\":360,\"power_w\":100000,\"start_min\":0},{\"direction\":\"DISCHARGE\",\"end_min\":1320,\"power_w\":150000,\"start_min\":1080}],\"ttl_sec\":3600,\"tz_offset_min\":540}",
+    "canonical_sha256": "23f8080a5b478f32b809ce144a23b6c8307a2fd984c676e269e536ff4ad3a4c2",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJkYXRlIjoiMjAyNi0xMi0zMSIsImlkIjoiMjJmN2YxYjgtZjA2Yy00MDM4LTkzNzItN2RlYzlhY2YwZTQ2IiwiaXNzdWVkX2F0IjoxNzgxMDAwMDAwOTAwLCJtb2RlIjoiU0NIRURVTEUiLCJydHVfaWQiOiJFU1MtMSIsInNsb3RzIjpbeyJkaXJlY3Rpb24iOiJDSEFSR0UiLCJlbmRfbWluIjozNjAsInBvd2VyX3ciOjEwMDAwMCwic3RhcnRfbWluIjowfSx7ImRpcmVjdGlvbiI6IkRJU0NIQVJHRSIsImVuZF9taW4iOjEzMjAsInBvd2VyX3ciOjE1MDAwMCwic3RhcnRfbWluIjoxMDgwfV0sInR0bF9zZWMiOjM2MDAsInR6X29mZnNldF9taW4iOjU0MH0",
+    "jws_signature_b64u": "0IW1RL8ECpMJB9rWxpZThFSUZB_9ksNcIIS0NU7LwJdlX1ga2R03rGYPsm7hfGAuww0KM_suh5y7v8zRbpOQPA"
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "case_id": "SCH-04",
+  "title": "SCHEDULE — soc_min_pct·soc_max_pct 만 전송(date 생략), 단일 슬롯",
+  "mode": "SCHEDULE",
+  "type1_ttl_sec_present": true,
+  "type2_present": [
+    "soc_min_pct",
+    "soc_max_pct"
+  ],
+  "type2_absent": [
+    "date"
+  ],
+  "notes": "슬롯 1개짜리 최소 스케줄.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "a9066ff6-0efd-4606-b1d9-fd5200e0f449",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 555,
+          "end_min": 570,
+          "direction": "DISCHARGE",
+          "power_w": 60000
+        }
+      ],
+      "soc_min_pct": 20,
+      "soc_max_pct": 80,
+      "ttl_sec": 1800,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.._ZtZvynisy-o4d5o6U7ZYVjpiCWYoa7cIzrmkMgp_M4eYupazhawIiIkz9Tb2Dx_dw7CgqYzDsCH3JIOljKKkQ"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "a9066ff6-0efd-4606-b1d9-fd5200e0f449",
+      "rtu_id": "ESS-1",
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 555,
+          "end_min": 570,
+          "direction": "DISCHARGE",
+          "power_w": 60000
+        }
+      ],
+      "ttl_sec": 1800,
+      "soc_min_pct": 20,
+      "soc_max_pct": 80
+    },
+    "canonical": "{\"id\":\"a9066ff6-0efd-4606-b1d9-fd5200e0f449\",\"issued_at\":1781000000900,\"mode\":\"SCHEDULE\",\"rtu_id\":\"ESS-1\",\"slots\":[{\"direction\":\"DISCHARGE\",\"end_min\":570,\"power_w\":60000,\"start_min\":555}],\"soc_max_pct\":80,\"soc_min_pct\":20,\"ttl_sec\":1800,\"tz_offset_min\":540}",
+    "canonical_sha256": "717c689b70f8bdd40c01c9d33f3ae70891f6546362d753d352742cef3b1043ad",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJpZCI6ImE5MDY2ZmY2LTBlZmQtNDYwNi1iMWQ5LWZkNTIwMGUwZjQ0OSIsImlzc3VlZF9hdCI6MTc4MTAwMDAwMDkwMCwibW9kZSI6IlNDSEVEVUxFIiwicnR1X2lkIjoiRVNTLTEiLCJzbG90cyI6W3siZGlyZWN0aW9uIjoiRElTQ0hBUkdFIiwiZW5kX21pbiI6NTcwLCJwb3dlcl93Ijo2MDAwMCwic3RhcnRfbWluIjo1NTV9XSwic29jX21heF9wY3QiOjgwLCJzb2NfbWluX3BjdCI6MjAsInR0bF9zZWMiOjE4MDAsInR6X29mZnNldF9taW4iOjU0MH0",
+    "jws_signature_b64u": "_ZtZvynisy-o4d5o6U7ZYVjpiCWYoa7cIzrmkMgp_M4eYupazhawIiIkz9Tb2Dx_dw7CgqYzDsCH3JIOljKKkQ"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "case_id": "NEG-04",
+  "expected": {
+    "verify": false,
+    "failure_code": "UNKNOWN_KID"
+  },
+  "title": "키스토어에 없는 key_id — fail-closed 거부",
+  "notes": "서명 자체는 유효한 개인키로 만들어졌습니다. 그럼에도 kid 를 모르면 거부해야 합니다(A.1 · A.4 2단계).",
+  "message": {
+    "schema_version": "0.2",
+    "id": "35887008-4bec-4a2c-89eb-7c9013510080",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-9999",
+      "direction": "CHARGE",
+      "power_w": 50000,
+      "ttl_sec": 120,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTk5OTkifQ..7-4dkOGxN6h2w0Z9fY6STaYc5tyT19Z7zAOT7MmHJ2MFyyJa3lFJP0drx1jQSHOEMbcWQDeoF88SfyR9x3A1Uw"
+    }
+  }
+}

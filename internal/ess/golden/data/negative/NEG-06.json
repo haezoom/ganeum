@@ -1,0 +1,26 @@
+{
+  "case_id": "NEG-06",
+  "expected": {
+    "verify": false,
+    "failure_code": "SIGNATURE_INVALID"
+  },
+  "title": "전송 중 power_w 변조(100kW → 900kW)",
+  "notes": "필수 서명 필드 변조의 기본 케이스입니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "49c94d4d-1a1b-4915-b6aa-61d6f43d0d46",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "DISCHARGE",
+      "power_w": 900000,
+      "ttl_sec": 120,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..OaIsbAPtj9x2pV6Gl202mwyy6IjSmpEvOEiNhA3JdNR4O4cyyx40wnBY-nVh-XFt_oUxK-ByxgNmcoPstoqX8A"
+    }
+  }
+}

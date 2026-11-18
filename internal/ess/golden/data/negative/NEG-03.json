@@ -1,0 +1,26 @@
+{
+  "case_id": "NEG-03",
+  "expected": {
+    "verify": false,
+    "failure_code": "ALG_NOT_ALLOWED"
+  },
+  "title": "protected header alg=\"none\"",
+  "notes": "A.4 1단계 · RFC 8725. alg 를 신뢰해 검증 방식을 바꾸면 안 됩니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "861a98fc-8703-403d-9a66-78d526ba3b4f",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "IDLE",
+      "power_w": 0,
+      "ttl_sec": 120,
+      "signature": "eyJhbGciOiJub25lIiwia2lkIjoiaGFlem9vbS1jdHJsLXRlc3QtMDAwMSJ9.."
+    }
+  }
+}

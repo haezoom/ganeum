@@ -1,0 +1,170 @@
+{
+  "cmd_immediate_idle_power.json": {
+    "expect_rule": "R-1",
+    "desc": "IDLE 인데 power_w≠0"
+  },
+  "cmd_immediate_slots.json": {
+    "expect_rule": "schema/not",
+    "desc": "IMMEDIATE 에 slots"
+  },
+  "cmd_immediate_ttl_301.json": {
+    "expect_rule": "schema/maximum",
+    "desc": "IMMEDIATE ttl>300"
+  },
+  "cmd_operation_mode.json": {
+    "expect_rule": "unknown-field",
+    "desc": "v0.2 에서 삭제된 operation_mode"
+  },
+  "cmd_schedule_hold_sec.json": {
+    "expect_rule": "schema/not",
+    "desc": "SCHEDULE 에 hold_sec (R-12)"
+  },
+  "cmd_schedule_not5.json": {
+    "expect_rule": "R-2/resolution",
+    "desc": "5분 배수 아님"
+  },
+  "cmd_schedule_order.json": {
+    "expect_rule": "R-2/order",
+    "desc": "슬롯 내림차순"
+  },
+  "cmd_schedule_overlap.json": {
+    "expect_rule": "R-2/overlap",
+    "desc": "슬롯 겹침"
+  },
+  "cmd_schedule_override.json": {
+    "expect_rule": "schema/not",
+    "desc": "SCHEDULE 에 override (R-12)"
+  },
+  "cmd_schedule_ttl_4000.json": {
+    "expect_rule": "schema/maximum",
+    "desc": "SCHEDULE ttl>3600"
+  },
+  "cmd_signature_der.json": {
+    "expect_rule": "jws-detached",
+    "desc": "detached 아님"
+  },
+  "cmd_soc_order.json": {
+    "expect_rule": "R-6",
+    "desc": "soc_min>soc_max"
+  },
+  "info_cap_pair.json": {
+    "expect_rule": "schema/pair",
+    "desc": "bms_capabilities 쌍 위반"
+  },
+  "info_failsafe_custom.json": {
+    "expect_rule": "schema/enum",
+    "desc": "failsafe_mode 미정의 값(자율운전 복귀)"
+  },
+  "info_missing_caps.json": {
+    "expect_rule": "schema/required",
+    "desc": "bms_capabilities 키 생략"
+  },
+  "info_resolution_1min.json": {
+    "expect_rule": "schema/enum",
+    "desc": "해상도 1분"
+  },
+  "info_schedule_no_resolution.json": {
+    "expect_rule": "schema/required",
+    "desc": "SCHEDULE 지원인데 해상도 없음"
+  },
+  "info_soc_limit_order.json": {
+    "expect_rule": "soc-limit-order",
+    "desc": "SoC 한계 역전"
+  },
+  "resp_accepted_no_readback.json": {
+    "expect_rule": "schema/required",
+    "desc": "accepted=true readback 누락"
+  },
+  "resp_payload_wrapper.json": {
+    "expect_rule": "flat",
+    "desc": "payload 래퍼"
+  },
+  "resp_rejected_no_reason.json": {
+    "expect_rule": "schema/required",
+    "desc": "거부인데 failure_reason 없음"
+  },
+  "resp_result_state.json": {
+    "expect_rule": "ack-state",
+    "desc": "accepted=true 인데 FAILURE"
+  },
+  "result_idle_nonzero.json": {
+    "expect_rule": "R-1",
+    "desc": "IDLE 도달 전력≠0"
+  },
+  "result_partial_no_reason.json": {
+    "expect_rule": "schema/required",
+    "desc": "PARTIAL 인데 failure_reason 없음"
+  },
+  "result_success_dir_mismatch.json": {
+    "expect_rule": "achievement",
+    "desc": "SUCCESS 인데 방향 불일치"
+  },
+  "result_success_no_effective.json": {
+    "expect_rule": "schema/required",
+    "desc": "SUCCESS 인데 effective_at 없음"
+  },
+  "tel_active_slot_range.json": {
+    "expect_rule": "R-2/range",
+    "desc": "active_slot start≥end"
+  },
+  "tel_avail_pair_broken.json": {
+    "expect_rule": "schema/required",
+    "desc": "avail 쌍 중 하나만"
+  },
+  "tel_bms_alarm_code.json": {
+    "expect_rule": "schema/enum",
+    "desc": "bms_alarm 코드 미정의"
+  },
+  "tel_event_time_iso.json": {
+    "expect_rule": "schema/type",
+    "desc": "ISO 시각 문자열"
+  },
+  "tel_event_time_seconds.json": {
+    "expect_rule": "epoch-ms",
+    "desc": "초 단위 시각"
+  },
+  "tel_idle_power.json": {
+    "expect_rule": "R-1",
+    "desc": "IDLE 인데 power_w≠0"
+  },
+  "tel_pcs_dup_id.json": {
+    "expect_rule": "pcs-id-unique",
+    "desc": "PCS id 중복"
+  },
+  "tel_power_float.json": {
+    "expect_rule": "schema/type",
+    "desc": "power_w 소수"
+  },
+  "tel_rack_online_gt_total.json": {
+    "expect_rule": "R-3",
+    "desc": "rack_online>rack_total"
+  },
+  "tel_reason_empty.json": {
+    "expect_rule": "reason-empty",
+    "desc": "reason 빈 문자열"
+  },
+  "tel_rtu_id_badchars.json": {
+    "expect_rule": "schema/pattern",
+    "desc": "rtu_id 허용 문자 위반"
+  },
+  "tel_rtu_id_number.json": {
+    "expect_rule": "schema/type",
+    "desc": "rtu_id 숫자"
+  },
+  "tel_running_without_direction.json": {
+    "expect_rule": "schema/required",
+    "desc": "RUN 인데 direction 없음"
+  },
+  "tel_schema_version_number.json": {
+    "expect_rule": "schema/type",
+    "desc": "schema_version 숫자"
+  },
+  "tel_soc_over_100.json": {
+    "expect_rule": "schema/maximum",
+    "desc": "SoC>100"
+  },
+  "tel_stop_without_reason.json": {
+    "expect_rule": "schema/required",
+    "desc": "STOP 인데 reason 없음"
+  }
+}

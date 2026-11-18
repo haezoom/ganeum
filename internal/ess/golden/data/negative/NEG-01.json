@@ -1,0 +1,26 @@
+{
+  "case_id": "NEG-01",
+  "expected": {
+    "verify": false,
+    "failure_code": "SIGNATURE_INVALID"
+  },
+  "title": "유형 ② 필드를 기본값으로 주입한 구현을 잡는 트랩 — override_polarity_gap 미전송인데 false 를 넣고 서명",
+  "notes": "명령에 override_polarity_gap 키가 **없습니다.** 서명은 그 키를 false 로 포함한 body 로 만들어졌습니다. A.3 규칙 3 을 지킨 검증기는 키를 넣지 않으므로 canonical 이 달라져 **거부**합니다. '없으면 기본값 false 를 넣는다'고 구현한 검증기는 **통과시켜 버립니다** — 그 구현은 양성 벡터를 전부 통과하므로 이 케이스가 없으면 결함이 드러나지 않습니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "8358e9a4-92c4-40d0-a118-4fef12e2760b",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "DISCHARGE",
+      "power_w": 200000,
+      "ttl_sec": 120,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..lxwaRA_Qa79uDXneZlQz705Np1ffJ5aZQWA2R4gcJ-MupHCtKdz4YWaP2BugjEkuYrogxfqw0VMFhR9Q_q0wbQ"
+    }
+  }
+}

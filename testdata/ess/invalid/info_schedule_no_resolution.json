@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.2",
+  "id": "a98af511-011d-494b-82bb-2ccfc0d27826",
+  "type": "info",
+  "rtu_id": "ESS-1",
+  "event_time": 1781000000000,
+  "ingest_time": 1781000000050,
+  "payload": {
+    "ems_model": "EMS-3000",
+    "firmware": "2.1.0",
+    "control_modes": [
+      "IMMEDIATE",
+      "SCHEDULE"
+    ],
+    "interval_sec": 60,
+    "bms_capabilities": [
+      "avail_charge_w",
+      "avail_discharge_w",
+      "rack_total",
+      "rack_online"
+    ],
+    "soc_limit_min_pct": 10,
+    "soc_limit_max_pct": 95,
+    "failsafe_mode": "SCHEDULE_HOLD",
+    "min_polarity_gap_sec": 1800,
+    "ems": {
+      "operation_modes": [
+        "AUTO",
+        "MANUAL",
+        "LOCAL"
+      ]
+    },
+    "battery": {
+      "rated_energy_wh": 500000,
+      "rated_power_w": 250000
+    },
+    "pcs": [
+      {
+        "id": "PCS-1",
+        "rated_power_w": 250000,
+        "model": "GEN-250"
+      }
+    ],
+    "pv": {
+      "capacity_w": 6000
+    }
+  }
+}

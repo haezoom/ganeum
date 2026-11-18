@@ -1,0 +1,48 @@
+{
+  "schema_version": "0.2",
+  "id": "cd788a49-51eb-4919-84c1-38f79868b61e",
+  "type": "telemetry",
+  "rtu_id": "ESS-1",
+  "event_time": 1781000000000,
+  "ingest_time": 1781000000450,
+  "payload": {
+    "is_control": false,
+    "pcs": [
+      {
+        "id": "PCS-1",
+        "power_w": 500,
+        "direction": "IDLE",
+        "status": "RUN"
+      }
+    ],
+    "battery": {
+      "soc_pct": 62,
+      "soh_pct": 98,
+      "avail_charge_w": 250000,
+      "avail_discharge_w": 250000,
+      "rack_total": 10,
+      "rack_online": 10,
+      "cell_v_max_mv": 3320,
+      "cell_v_min_mv": 3300,
+      "cell_t_max_c": 27,
+      "cell_t_min_c": 24
+    },
+    "ems": {
+      "operation_mode": "AUTO",
+      "active_slot": {
+        "start_min": 1080,
+        "end_min": 1320,
+        "direction": "DISCHARGE",
+        "power_w": 150000
+      }
+    },
+    "energy": {
+      "charged_wh": 120000,
+      "discharged_wh": 98000
+    },
+    "pv": {
+      "power_w": 5200,
+      "export_w": 4800
+    }
+  }
+}

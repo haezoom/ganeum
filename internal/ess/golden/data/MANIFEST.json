@@ -1,0 +1,373 @@
+{
+  "bundle": "ESS 제어·모니터링 표준 v0.2 — 제어 명령 서명 골든 테스트 벡터",
+  "standard": {
+    "set": "ESS_제어_표준",
+    "version": "0.2 (Draft)",
+    "date": "2026-09-07",
+    "spec_refs": [
+      "01_API표준_데이터연동.md 부록 A.2",
+      "… A.3",
+      "… A.4",
+      "… A.5"
+    ]
+  },
+  "signature_profile": {
+    "alg": "ES256 (ECDSA P-256 + SHA-256)",
+    "canonicalization": "RFC 8785 (JCS)",
+    "jws": "RFC 7515 detached compact — signature = BASE64URL(protected) + '..' + BASE64URL(R||S)",
+    "jws_signing_input": "ASCII( BASE64URL(protected) + '.' + BASE64URL(canonical_bytes) )",
+    "ecdsa_signature_encoding": "raw R||S 64바이트 (DER 아님)",
+    "protected_header": {
+      "alg": "ES256",
+      "kid": "<key_id>"
+    },
+    "note": "확정 규격입니다. JWS 직렬화 세부(서명 입력 구성·R||S 인코딩·detached compact 형태)는 01 부록 A.2 에, kid<->key_id 불일치 거부 규칙은 A.4 2-1 단계에 각각 문면으로 명시되어 있습니다. 본 값은 해줌 발행 구현이 실제로 산출하는 바이트이며 독립 JOSE 구현과의 교차검증으로 동일함을 확인했습니다."
+  },
+  "test_key": {
+    "kid": "haezoom-ctrl-test-0001",
+    "curve": "P-256",
+    "files": [
+      "keys/test_ec_p256_public.pem",
+      "keys/test_ec_p256_private.pem",
+      "keys/keystore.json",
+      "keys/test_ec_p256_private_jwk.json"
+    ],
+    "warning": "시험 전용. 운영 키와 무관하며 운영에 사용하지 마십시오."
+  },
+  "verifier": {
+    "file": "verify_golden.py",
+    "runtime": "Python 3.8+ 표준 라이브러리만",
+    "implements": "01 부록 A.4 1~5단계",
+    "not_implemented": "A.4 6단계(ttl 만료·시각 스큐) · 7단계(id dedup) — 벽시계·수신이력 의존이라 골든 벡터로 재현 불가",
+    "regenerate": "python3 verify_golden.py --regenerate (결정적 재생산)"
+  },
+  "counts": {
+    "positive": 9,
+    "negative": 7
+  },
+  "coverage_matrix": {
+    "IMMEDIATE": {
+      "ttl_sec": {
+        "applicable": true,
+        "type": "①",
+        "present": [
+          "IMM-01B",
+          "IMM-02",
+          "IMM-03"
+        ],
+        "absent": [
+          "IMM-01",
+          "IMM-04"
+        ]
+      },
+      "soc_min_pct": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "IMM-02",
+          "IMM-03"
+        ],
+        "absent": [
+          "IMM-01",
+          "IMM-01B",
+          "IMM-04"
+        ]
+      },
+      "soc_max_pct": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "IMM-02",
+          "IMM-04"
+        ],
+        "absent": [
+          "IMM-01",
+          "IMM-01B",
+          "IMM-03"
+        ]
+      },
+      "hold_sec": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "IMM-02",
+          "IMM-04"
+        ],
+        "absent": [
+          "IMM-01",
+          "IMM-01B",
+          "IMM-03"
+        ]
+      },
+      "override_polarity_gap": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "IMM-02",
+          "IMM-03"
+        ],
+        "absent": [
+          "IMM-01",
+          "IMM-01B",
+          "IMM-04"
+        ]
+      },
+      "date": {
+        "applicable": false
+      }
+    },
+    "SCHEDULE": {
+      "ttl_sec": {
+        "applicable": true,
+        "type": "①",
+        "present": [
+          "SCH-02",
+          "SCH-03",
+          "SCH-04"
+        ],
+        "absent": [
+          "SCH-01"
+        ]
+      },
+      "soc_min_pct": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "SCH-02",
+          "SCH-04"
+        ],
+        "absent": [
+          "SCH-01",
+          "SCH-03"
+        ]
+      },
+      "soc_max_pct": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "SCH-02",
+          "SCH-04"
+        ],
+        "absent": [
+          "SCH-01",
+          "SCH-03"
+        ]
+      },
+      "hold_sec": {
+        "applicable": false
+      },
+      "override_polarity_gap": {
+        "applicable": false
+      },
+      "date": {
+        "applicable": true,
+        "type": "②",
+        "present": [
+          "SCH-02",
+          "SCH-03"
+        ],
+        "absent": [
+          "SCH-01",
+          "SCH-04"
+        ]
+      }
+    }
+  },
+  "vectors": [
+    {
+      "case_id": "IMM-01",
+      "file": "vectors/IMM-01.json",
+      "mode": "IMMEDIATE",
+      "title": "IMMEDIATE — 선택 서명 필드 전부 생략 + ttl_sec 생략(기본값 120 주입)",
+      "type2_present": [],
+      "type2_absent": [
+        "soc_min_pct",
+        "soc_max_pct",
+        "hold_sec",
+        "override_polarity_gap"
+      ],
+      "ttl_sec_sent": false,
+      "canonical_sha256": "f738c082a8d7a1729cc6a97d95ff9d2a499031dede39a7c55d1911afcf9f0cda",
+      "expect_verify": true
+    },
+    {
+      "case_id": "IMM-01B",
+      "file": "vectors/IMM-01B.json",
+      "mode": "IMMEDIATE",
+      "title": "IMMEDIATE — ttl_sec 를 120 으로 명시 전송(IMM-01 과 동일 바이트)",
+      "type2_present": [],
+      "type2_absent": [
+        "soc_min_pct",
+        "soc_max_pct",
+        "hold_sec",
+        "override_polarity_gap"
+      ],
+      "ttl_sec_sent": true,
+      "canonical_sha256": "f738c082a8d7a1729cc6a97d95ff9d2a499031dede39a7c55d1911afcf9f0cda",
+      "expect_verify": true
+    },
+    {
+      "case_id": "IMM-02",
+      "file": "vectors/IMM-02.json",
+      "mode": "IMMEDIATE",
+      "title": "IMMEDIATE — 선택 서명 필드 4종 전부 전송(override_polarity_gap=true)",
+      "type2_present": [
+        "soc_min_pct",
+        "soc_max_pct",
+        "hold_sec",
+        "override_polarity_gap"
+      ],
+      "type2_absent": [],
+      "ttl_sec_sent": true,
+      "canonical_sha256": "2acce09f9f83a902b2ccce805470a174c5ba0da028f7a025f6bc1fb1fba8af45",
+      "expect_verify": true
+    },
+    {
+      "case_id": "IMM-03",
+      "file": "vectors/IMM-03.json",
+      "mode": "IMMEDIATE",
+      "title": "IMMEDIATE — override_polarity_gap=false 를 명시 전송, soc_min_pct 만 전송",
+      "type2_present": [
+        "soc_min_pct",
+        "override_polarity_gap"
+      ],
+      "type2_absent": [
+        "soc_max_pct",
+        "hold_sec"
+      ],
+      "ttl_sec_sent": true,
+      "canonical_sha256": "b10aa2c4716eba824810813730fc544a65ed27b5dcb1c08fd2d3965835c0f025",
+      "expect_verify": true
+    },
+    {
+      "case_id": "IMM-04",
+      "file": "vectors/IMM-04.json",
+      "mode": "IMMEDIATE",
+      "title": "IMMEDIATE — IDLE(완전정지) + soc_max_pct·hold_sec 만 전송, ttl_sec 생략",
+      "type2_present": [
+        "soc_max_pct",
+        "hold_sec"
+      ],
+      "type2_absent": [
+        "soc_min_pct",
+        "override_polarity_gap"
+      ],
+      "ttl_sec_sent": false,
+      "canonical_sha256": "db47e60ed6686b84e699af92a7179cda2a7558659def9f5a06c52c187da577b5",
+      "expect_verify": true
+    },
+    {
+      "case_id": "SCH-01",
+      "file": "vectors/SCH-01.json",
+      "mode": "SCHEDULE",
+      "title": "SCHEDULE — 선택 서명 필드 전부 생략 + ttl_sec 생략(기본값 120 주입)",
+      "type2_present": [],
+      "type2_absent": [
+        "soc_min_pct",
+        "soc_max_pct",
+        "date"
+      ],
+      "ttl_sec_sent": false,
+      "canonical_sha256": "55b756fb5b0a076abc0f6aab3571264ed0a802bb002f0a4d16b6831bf8fa98b5",
+      "expect_verify": true
+    },
+    {
+      "case_id": "SCH-02",
+      "file": "vectors/SCH-02.json",
+      "mode": "SCHEDULE",
+      "title": "SCHEDULE — 선택 서명 필드 3종 전부 전송(date 포함) + IDLE 슬롯",
+      "type2_present": [
+        "soc_min_pct",
+        "soc_max_pct",
+        "date"
+      ],
+      "type2_absent": [],
+      "ttl_sec_sent": true,
+      "canonical_sha256": "2c1d9f659b34f65a1b1e48cda0029029128bf1f9407113db96ce84c14c1ce3af",
+      "expect_verify": true
+    },
+    {
+      "case_id": "SCH-03",
+      "file": "vectors/SCH-03.json",
+      "mode": "SCHEDULE",
+      "title": "SCHEDULE — date 만 전송(soc_* 생략)",
+      "type2_present": [
+        "date"
+      ],
+      "type2_absent": [
+        "soc_min_pct",
+        "soc_max_pct"
+      ],
+      "ttl_sec_sent": true,
+      "canonical_sha256": "23f8080a5b478f32b809ce144a23b6c8307a2fd984c676e269e536ff4ad3a4c2",
+      "expect_verify": true
+    },
+    {
+      "case_id": "SCH-04",
+      "file": "vectors/SCH-04.json",
+      "mode": "SCHEDULE",
+      "title": "SCHEDULE — soc_min_pct·soc_max_pct 만 전송(date 생략), 단일 슬롯",
+      "type2_present": [
+        "soc_min_pct",
+        "soc_max_pct"
+      ],
+      "type2_absent": [
+        "date"
+      ],
+      "ttl_sec_sent": true,
+      "canonical_sha256": "717c689b70f8bdd40c01c9d33f3ae70891f6546362d753d352742cef3b1043ad",
+      "expect_verify": true
+    }
+  ],
+  "negative_vectors": [
+    {
+      "case_id": "NEG-01",
+      "file": "negative/NEG-01.json",
+      "title": "유형 ② 필드를 기본값으로 주입한 구현을 잡는 트랩 — override_polarity_gap 미전송인데 false 를 넣고 서명",
+      "expect_verify": false,
+      "expect_failure_code": "SIGNATURE_INVALID"
+    },
+    {
+      "case_id": "NEG-02",
+      "file": "negative/NEG-02.json",
+      "title": "전송 중 override_polarity_gap 을 false→true 로 변조",
+      "expect_verify": false,
+      "expect_failure_code": "SIGNATURE_INVALID"
+    },
+    {
+      "case_id": "NEG-03",
+      "file": "negative/NEG-03.json",
+      "title": "protected header alg=\"none\"",
+      "expect_verify": false,
+      "expect_failure_code": "ALG_NOT_ALLOWED"
+    },
+    {
+      "case_id": "NEG-04",
+      "file": "negative/NEG-04.json",
+      "title": "키스토어에 없는 key_id — fail-closed 거부",
+      "expect_verify": false,
+      "expect_failure_code": "UNKNOWN_KID"
+    },
+    {
+      "case_id": "NEG-05",
+      "file": "negative/NEG-05.json",
+      "title": "유형 ① ttl_sec 기본값 주입을 빠뜨린 구현을 잡는 트랩",
+      "expect_verify": false,
+      "expect_failure_code": "SIGNATURE_INVALID"
+    },
+    {
+      "case_id": "NEG-06",
+      "file": "negative/NEG-06.json",
+      "title": "전송 중 power_w 변조(100kW → 900kW)",
+      "expect_verify": false,
+      "expect_failure_code": "SIGNATURE_INVALID"
+    },
+    {
+      "case_id": "NEG-07",
+      "file": "negative/NEG-07.json",
+      "title": "전송 중 override_polarity_gap 을 주입(미전송 → true 추가)",
+      "expect_verify": false,
+      "expect_failure_code": "SIGNATURE_INVALID"
+    }
+  ]
+}

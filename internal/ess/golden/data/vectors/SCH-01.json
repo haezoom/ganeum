@@ -1,0 +1,72 @@
+{
+  "case_id": "SCH-01",
+  "title": "SCHEDULE — 선택 서명 필드 전부 생략 + ttl_sec 생략(기본값 120 주입)",
+  "mode": "SCHEDULE",
+  "type1_ttl_sec_present": false,
+  "type2_present": [],
+  "type2_absent": [
+    "soc_min_pct",
+    "soc_max_pct",
+    "date"
+  ],
+  "notes": "slots 배열은 **원 순서 그대로** 유지하고, 각 슬롯 객체의 키는 JCS 규칙에 따라 정렬됩니다(direction, end_min, power_w, start_min). 배열 순서와 객체 키 정렬을 혼동하지 마십시오.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "05b0a757-943e-4a14-b677-c48783885c2d",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 0,
+          "end_min": 360,
+          "direction": "CHARGE",
+          "power_w": 100000
+        },
+        {
+          "start_min": 1080,
+          "end_min": 1320,
+          "direction": "DISCHARGE",
+          "power_w": 150000
+        }
+      ],
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..2lz5dizXgeKcTTx255TyuJl1zZU6TK35UmB48ufnCHEPsaBuf67VzApIGzzKjhnTo9jJz6PVa98LKNJzslQwxg"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "05b0a757-943e-4a14-b677-c48783885c2d",
+      "rtu_id": "ESS-1",
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 0,
+          "end_min": 360,
+          "direction": "CHARGE",
+          "power_w": 100000
+        },
+        {
+          "start_min": 1080,
+          "end_min": 1320,
+          "direction": "DISCHARGE",
+          "power_w": 150000
+        }
+      ],
+      "ttl_sec": 120
+    },
+    "canonical": "{\"id\":\"05b0a757-943e-4a14-b677-c48783885c2d\",\"issued_at\":1781000000900,\"mode\":\"SCHEDULE\",\"rtu_id\":\"ESS-1\",\"slots\":[{\"direction\":\"CHARGE\",\"end_min\":360,\"power_w\":100000,\"start_min\":0},{\"direction\":\"DISCHARGE\",\"end_min\":1320,\"power_w\":150000,\"start_min\":1080}],\"ttl_sec\":120,\"tz_offset_min\":540}",
+    "canonical_sha256": "55b756fb5b0a076abc0f6aab3571264ed0a802bb002f0a4d16b6831bf8fa98b5",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJpZCI6IjA1YjBhNzU3LTk0M2UtNGExNC1iNjc3LWM0ODc4Mzg4NWMyZCIsImlzc3VlZF9hdCI6MTc4MTAwMDAwMDkwMCwibW9kZSI6IlNDSEVEVUxFIiwicnR1X2lkIjoiRVNTLTEiLCJzbG90cyI6W3siZGlyZWN0aW9uIjoiQ0hBUkdFIiwiZW5kX21pbiI6MzYwLCJwb3dlcl93IjoxMDAwMDAsInN0YXJ0X21pbiI6MH0seyJkaXJlY3Rpb24iOiJESVNDSEFSR0UiLCJlbmRfbWluIjoxMzIwLCJwb3dlcl93IjoxNTAwMDAsInN0YXJ0X21pbiI6MTA4MH1dLCJ0dGxfc2VjIjoxMjAsInR6X29mZnNldF9taW4iOjU0MH0",
+    "jws_signature_b64u": "2lz5dizXgeKcTTx255TyuJl1zZU6TK35UmB48ufnCHEPsaBuf67VzApIGzzKjhnTo9jJz6PVa98LKNJzslQwxg"
+  }
+}

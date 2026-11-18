@@ -12,7 +12,7 @@ LDFLAGS  := -s -w \
 # GOOS/GOARCH cross-compile targets (지시서 §6: 최소 3종).
 PLATFORMS := darwin/arm64 darwin/amd64 linux/amd64 linux/arm64 windows/amd64
 
-.PHONY: all build test vet fmt smoke build-all clean
+.PHONY: all build test vet fmt smoke smoke-ess build-all clean
 
 all: vet test build
 
@@ -40,6 +40,15 @@ smoke: build
 	@./$(BINARY) verify-command --pubkey testdata/phase2/vectors/test_es256_pub.pem \
 		--key-id haezoom-ctrl-2026-07 testdata/phase2/vectors/invalid/bad_sig_tampered.json; \
 		test $$? -eq 1 && echo "OK: 종료코드 1"
+
+# ESS 프로필 스모크 (DRAFT): 골든 16/16, valid → 0, invalid → 1
+smoke-ess: build
+	./$(BINARY) ess golden
+	./$(BINARY) ess validate testdata/ess/valid
+	./$(BINARY) ess validate --info testdata/ess/valid/info.json testdata/ess/valid/telemetry.json
+	./$(BINARY) ess verify-command --test-keystore testdata/ess/valid/command_immediate.json testdata/ess/valid/command_schedule.json
+	@echo "--- ess invalid (기대 종료코드 1) ---"
+	@./$(BINARY) ess validate -q testdata/ess/invalid > /dev/null; test $$? -eq 1 && echo "OK: 종료코드 1"
 
 build-all: $(PLATFORMS)
 

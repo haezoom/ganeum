@@ -1,5 +1,6 @@
-// Command ganeum (가늠) self-validates Phase1 telemetry/info JSON payloads
-// against the 해줌 monitoring standard before a partner connects to the broker.
+// Command ganeum (가늠) self-validates 해줌 표준 payloads before a partner
+// connects to the broker: 태양광 Phase1(모니터링)·Phase2(제어) and the ESS
+// 프로필(`ganeum ess ...`, ESS 제어·모니터링 표준 v0.2, DRAFT).
 package main
 
 import (
@@ -29,15 +30,17 @@ var (
 const usage = `가늠(ganeum) — 모니터링(Phase1)·제어(Phase2) 규격 자기검증 도구
 
 사용법:
-  ganeum validate [옵션] <경로...>            # 스키마 검증 (phase1/phase2)
+  ganeum validate [옵션] <경로...>            # 스키마 검증 (phase1/phase2/ess)
   ganeum verify-command --pubkey <pem> --key-id <kid> <command.json>
   ganeum sign-command  --privkey <pem> --key-id <kid> <command.json>
   ganeum gen-key [--alg es256|ed25519] [--priv <path>] [--pub <path>]
   ganeum version
+  ganeum ess <서브커맨드> ...                # ESS 표준 v0.2 프로필 [DRAFT] — 'ganeum ess help'
 
 validate 옵션:
   <경로>            .json 파일, 디렉토리(재귀 .json 전수), 또는 '-'(stdin)
   --profile string  phase1(기본) | phase2(제어평면 command/response/result)
+                    | ess(ESS 표준 v0.2 — 'ganeum ess validate' 와 동일, 전용 옵션은 'ganeum ess help')
   --type string     [phase1] telemetry|info|auto (기본 auto)
   --kind string     [phase2] command|response|result|auto (기본 auto)
   --strict          미지 필드 등 약한 warn 을 error 로 승격
@@ -85,6 +88,8 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 		return runSignCommand(args[1:], stdin, stdout, stderr)
 	case "gen-key":
 		return runGenKey(args[1:], stdout, stderr)
+	case "ess":
+		return runESS(args[1:], stdin, stdout, stderr)
 	case "version":
 		fmt.Fprintf(stdout, "ganeum %s (commit %s, built %s)\n", version, commit, date)
 		return 0
@@ -98,6 +103,9 @@ func run(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 }
 
 func runValidate(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	if rest, ok := essProfileArgs(args); ok {
+		return essRunValidate(rest, stdin, stdout, stderr)
+	}
 	fs := flag.NewFlagSet("validate", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	fs.Usage = func() { fmt.Fprint(stderr, usage) }
@@ -118,7 +126,7 @@ func runValidate(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
 	switch *profile {
 	case "phase1", "phase2":
 	default:
-		fmt.Fprintf(stderr, "지원하지 않는 프로필입니다: %q (phase1|phase2)\n", *profile)
+		fmt.Fprintf(stderr, "지원하지 않는 프로필입니다: %q (phase1|phase2|ess)\n", *profile)
 		return 2
 	}
 	switch *typ {
@@ -282,6 +290,9 @@ func readInput(path string, stdin io.Reader) ([]byte, error) {
 
 // runVerifyCommand implements `ganeum verify-command` (부록 A.4).
 func runVerifyCommand(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	if rest, ok := essProfileArgs(args); ok {
+		return essRunVerify(rest, stdin, stdout, stderr)
+	}
 	fs := flag.NewFlagSet("verify-command", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	fs.Usage = func() { fmt.Fprint(stderr, usage) }
@@ -356,6 +367,9 @@ func ttlNote(injected bool) string {
 
 // runSignCommand implements `ganeum sign-command` (참조 서명기).
 func runSignCommand(args []string, stdin io.Reader, stdout, stderr io.Writer) int {
+	if rest, ok := essProfileArgs(args); ok {
+		return essRunSign(rest, stdin, stdout, stderr)
+	}
 	fs := flag.NewFlagSet("sign-command", flag.ContinueOnError)
 	fs.SetOutput(stderr)
 	fs.Usage = func() { fmt.Fprint(stderr, usage) }
@@ -476,4 +490,24 @@ func jsonFilesUnder(dir string) ([]string, error) {
 	}
 	sort.Strings(files)
 	return files, nil
+}
+
+// essProfileArgs reports whether args select the ESS profile (--profile ess
+// or --profile=ess) and returns args with that flag removed.
+func essProfileArgs(args []string) ([]string, bool) {
+	out := make([]string, 0, len(args))
+	ess := false
+	for i := 0; i < len(args); i++ {
+		a := args[i]
+		switch {
+		case (a == "--profile" || a == "-profile") && i+1 < len(args) && args[i+1] == "ess":
+			ess = true
+			i++
+		case a == "--profile=ess" || a == "-profile=ess":
+			ess = true
+		default:
+			out = append(out, a)
+		}
+	}
+	return out, ess
 }

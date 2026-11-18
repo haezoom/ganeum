@@ -1,0 +1,27 @@
+{
+  "case_id": "NEG-02",
+  "expected": {
+    "verify": false,
+    "failure_code": "SIGNATURE_INVALID"
+  },
+  "title": "전송 중 override_polarity_gap 을 false→true 로 변조",
+  "notes": "이 필드를 서명 대상에 넣는 이유를 실행 가능한 형태로 보인 케이스입니다. 서명 대상에서 뺐다면 이 변조가 통과해 극성 휴지 안전 제약이 무력화됩니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "c96326fa-0f75-4ef7-bb00-60eecd3f4dda",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "DISCHARGE",
+      "power_w": 250000,
+      "override_polarity_gap": true,
+      "ttl_sec": 120,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..FboOEO9u4mpaHQiB3cBJU1Vu_4X4kqvxwckgkhiruB4giHeBi9w8L7r8egfTvcGyU5S284k6sEXxBEY5anC9ag"
+    }
+  }
+}

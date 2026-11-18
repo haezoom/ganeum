@@ -1,0 +1,47 @@
+{
+  "case_id": "IMM-01",
+  "title": "IMMEDIATE — 선택 서명 필드 전부 생략 + ttl_sec 생략(기본값 120 주입)",
+  "mode": "IMMEDIATE",
+  "type1_ttl_sec_present": false,
+  "type2_present": [],
+  "type2_absent": [
+    "soc_min_pct",
+    "soc_max_pct",
+    "hold_sec",
+    "override_polarity_gap"
+  ],
+  "notes": "유형 ② 4필드가 모두 없습니다. 유형 ① ttl_sec 도 없으므로 양측이 120 을 주입한 뒤 canonical 합니다. 고정 키 목록을 가정한 구현도 우연히 통과하는 케이스이므로, 이것만 통과했다면 시험을 통과한 것이 아닙니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "e1b6e0b2-60a8-432b-a551-2d0a6baa2fc3",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "DISCHARGE",
+      "power_w": 200000,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..yKj00X_aX5faKaZqsnHUXZ1reBEYFio4t2coK6PdmC0BDyr_L2zWfTlDu51aE9u0lxeg6GQlJETEZiswVQ3KQw"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "e1b6e0b2-60a8-432b-a551-2d0a6baa2fc3",
+      "rtu_id": "ESS-1",
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "direction": "DISCHARGE",
+      "power_w": 200000,
+      "ttl_sec": 120
+    },
+    "canonical": "{\"direction\":\"DISCHARGE\",\"id\":\"e1b6e0b2-60a8-432b-a551-2d0a6baa2fc3\",\"issued_at\":1781000000900,\"mode\":\"IMMEDIATE\",\"power_w\":200000,\"rtu_id\":\"ESS-1\",\"ttl_sec\":120}",
+    "canonical_sha256": "f738c082a8d7a1729cc6a97d95ff9d2a499031dede39a7c55d1911afcf9f0cda",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJkaXJlY3Rpb24iOiJESVNDSEFSR0UiLCJpZCI6ImUxYjZlMGIyLTYwYTgtNDMyYi1hNTUxLTJkMGE2YmFhMmZjMyIsImlzc3VlZF9hdCI6MTc4MTAwMDAwMDkwMCwibW9kZSI6IklNTUVESUFURSIsInBvd2VyX3ciOjIwMDAwMCwicnR1X2lkIjoiRVNTLTEiLCJ0dGxfc2VjIjoxMjB9",
+    "jws_signature_b64u": "yKj00X_aX5faKaZqsnHUXZ1reBEYFio4t2coK6PdmC0BDyr_L2zWfTlDu51aE9u0lxeg6GQlJETEZiswVQ3KQw"
+  }
+}

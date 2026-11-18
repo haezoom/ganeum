@@ -1,0 +1,91 @@
+{
+  "case_id": "SCH-02",
+  "title": "SCHEDULE — 선택 서명 필드 3종 전부 전송(date 포함) + IDLE 슬롯",
+  "mode": "SCHEDULE",
+  "type1_ttl_sec_present": true,
+  "type2_present": [
+    "soc_min_pct",
+    "soc_max_pct",
+    "date"
+  ],
+  "type2_absent": [],
+  "notes": "유형 ② 최대 집합. ttl_sec 는 SCHEDULE 상한 3600 입니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "227f681a-01b1-4b06-9d84-005b5d0d120e",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 0,
+          "end_min": 300,
+          "direction": "CHARGE",
+          "power_w": 120000
+        },
+        {
+          "start_min": 300,
+          "end_min": 1020,
+          "direction": "IDLE",
+          "power_w": 0
+        },
+        {
+          "start_min": 1020,
+          "end_min": 1440,
+          "direction": "DISCHARGE",
+          "power_w": 180000
+        }
+      ],
+      "soc_min_pct": 10,
+      "soc_max_pct": 95,
+      "date": "2026-09-08",
+      "ttl_sec": 3600,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..It2BG9rEtfrJq5Xq--qNhJ_TbtBE8FXfgUP5jh9qMyRUTWHcJCeBgGcZ1YVWVtTE2WVAz0SpvMNGpiWwpy3xdA"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "227f681a-01b1-4b06-9d84-005b5d0d120e",
+      "rtu_id": "ESS-1",
+      "mode": "SCHEDULE",
+      "issued_at": 1781000000900,
+      "tz_offset_min": 540,
+      "slots": [
+        {
+          "start_min": 0,
+          "end_min": 300,
+          "direction": "CHARGE",
+          "power_w": 120000
+        },
+        {
+          "start_min": 300,
+          "end_min": 1020,
+          "direction": "IDLE",
+          "power_w": 0
+        },
+        {
+          "start_min": 1020,
+          "end_min": 1440,
+          "direction": "DISCHARGE",
+          "power_w": 180000
+        }
+      ],
+      "ttl_sec": 3600,
+      "soc_min_pct": 10,
+      "soc_max_pct": 95,
+      "date": "2026-09-08"
+    },
+    "canonical": "{\"date\":\"2026-09-08\",\"id\":\"227f681a-01b1-4b06-9d84-005b5d0d120e\",\"issued_at\":1781000000900,\"mode\":\"SCHEDULE\",\"rtu_id\":\"ESS-1\",\"slots\":[{\"direction\":\"CHARGE\",\"end_min\":300,\"power_w\":120000,\"start_min\":0},{\"direction\":\"IDLE\",\"end_min\":1020,\"power_w\":0,\"start_min\":300},{\"direction\":\"DISCHARGE\",\"end_min\":1440,\"power_w\":180000,\"start_min\":1020}],\"soc_max_pct\":95,\"soc_min_pct\":10,\"ttl_sec\":3600,\"tz_offset_min\":540}",
+    "canonical_sha256": "2c1d9f659b34f65a1b1e48cda0029029128bf1f9407113db96ce84c14c1ce3af",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJkYXRlIjoiMjAyNi0wOS0wOCIsImlkIjoiMjI3ZjY4MWEtMDFiMS00YjA2LTlkODQtMDA1YjVkMGQxMjBlIiwiaXNzdWVkX2F0IjoxNzgxMDAwMDAwOTAwLCJtb2RlIjoiU0NIRURVTEUiLCJydHVfaWQiOiJFU1MtMSIsInNsb3RzIjpbeyJkaXJlY3Rpb24iOiJDSEFSR0UiLCJlbmRfbWluIjozMDAsInBvd2VyX3ciOjEyMDAwMCwic3RhcnRfbWluIjowfSx7ImRpcmVjdGlvbiI6IklETEUiLCJlbmRfbWluIjoxMDIwLCJwb3dlcl93IjowLCJzdGFydF9taW4iOjMwMH0seyJkaXJlY3Rpb24iOiJESVNDSEFSR0UiLCJlbmRfbWluIjoxNDQwLCJwb3dlcl93IjoxODAwMDAsInN0YXJ0X21pbiI6MTAyMH1dLCJzb2NfbWF4X3BjdCI6OTUsInNvY19taW5fcGN0IjoxMCwidHRsX3NlYyI6MzYwMCwidHpfb2Zmc2V0X21pbiI6NTQwfQ",
+    "jws_signature_b64u": "It2BG9rEtfrJq5Xq--qNhJ_TbtBE8FXfgUP5jh9qMyRUTWHcJCeBgGcZ1YVWVtTE2WVAz0SpvMNGpiWwpy3xdA"
+  }
+}

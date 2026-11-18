@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/ess/command.schema.json",
+  "allOf": [
+    {
+      "$ref": "common.schema.json#/$defs/header"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "command"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "mode",
+        "issued_at",
+        "key_id",
+        "signature"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "IMMEDIATE",
+            "SCHEDULE"
+          ]
+        },
+        "issued_at": {
+          "$ref": "common.schema.json#/$defs/epochMillis"
+        },
+        "ttl_sec": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "명령 수용·서명 유효기간(초). 생략 시 양측이 동일하게 120을 주입합니다. 상한은 모드별로 다릅니다 — IMMEDIATE ≤ 300, SCHEDULE ≤ 3600(아래 oneOf 분기)"
+        },
+        "soc_min_pct": {
+          "$ref": "common.schema.json#/$defs/pct"
+        },
+        "soc_max_pct": {
+          "$ref": "common.schema.json#/$defs/pct"
+        },
+        "key_id": {
+          "$ref": "common.schema.json#/$defs/idString"
+        },
+        "signature": {
+          "type": "string",
+          "minLength": 1
+        },
+        "direction": {
+          "$ref": "common.schema.json#/$defs/direction"
+        },
+        "power_w": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "IMMEDIATE 목표 전력 크기(W, 정수). IDLE이면 0"
+        },
+        "hold_sec": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "IMMEDIATE 전용(선택). 이 즉시 목표를 유지할 시간(초). 만료 시 등록 스케줄로 자동 복귀하며 스케줄이 없으면 IDLE로 복귀합니다. 미지정 시 현행대로 후속 명령이 올 때까지 마지막 유효 목표를 유지합니다. 상한은 [협의 필요]로 두며 v0.2는 상한을 두지 않습니다"
+        },
+        "override_polarity_gap": {
+          "type": "boolean",
+          "description": "IMMEDIATE 전용(선택, 기본 false). true이면 EMS는 info.min_polarity_gap_sec 극성 휴지 제약을 무시하고 명령을 수행합니다. 없거나 false이면 휴지 위반 명령을 BAD_REQUEST로 거부합니다. 서명 대상에 포함됩니다(01 부록 A.3)"
+        },
+        "tz_offset_min": {
+          "type": "integer",
+          "description": "슬롯 시각 시간대 오프셋(분). KST=540"
+        },
+        "date": {
+          "$ref": "common.schema.json#/$defs/localDate",
+          "description": "SCHEDULE 전용(선택). 이 스케줄을 적용할 특정 날짜(tz_offset_min 기준 YYYY-MM-DD). 생략 시 매일 반복(daily recurring)"
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 288,
+          "description": "maxItems 288 = 1440분 / 5분(schedule_resolution_min 하한)",
+          "items": {
+            "type": "object",
+            "required": [
+              "start_min",
+              "end_min",
+              "direction",
+              "power_w"
+            ],
+            "properties": {
+              "start_min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1440
+              },
+              "end_min": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1440
+              },
+              "direction": {
+                "$ref": "common.schema.json#/$defs/direction"
+              },
+              "power_w": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "mode": {
+              "const": "IMMEDIATE"
+            },
+            "ttl_sec": {
+              "maximum": 300
+            }
+          },
+          "required": [
+            "mode",
+            "direction",
+            "power_w"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "date"
+                ]
+              },
+              {
+                "required": [
+                  "tz_offset_min"
+                ]
+              },
+              {
+                "required": [
+                  "slots"
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "mode": {
+              "const": "SCHEDULE"
+            },
+            "ttl_sec": {
+              "maximum": 3600
+            }
+          },
+          "required": [
+            "mode",
+            "tz_offset_min",
+            "slots"
+          ],
+          "not": {
+            "anyOf": [
+              {
+                "required": [
+                  "hold_sec"
+                ]
+              },
+              {
+                "required": [
+                  "override_polarity_gap"
+                ]
+              },
+              {
+                "required": [
+                  "direction"
+                ]
+              },
+              {
+                "required": [
+                  "power_w"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

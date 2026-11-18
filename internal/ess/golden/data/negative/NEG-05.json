@@ -1,0 +1,25 @@
+{
+  "case_id": "NEG-05",
+  "expected": {
+    "verify": false,
+    "failure_code": "SIGNATURE_INVALID"
+  },
+  "title": "유형 ① ttl_sec 기본값 주입을 빠뜨린 구현을 잡는 트랩",
+  "notes": "ttl_sec 미전송 명령의 서명이 ttl_sec 없는 body 로 만들어졌습니다. A.3 규칙 2 를 지킨 검증기는 120 을 주입하므로 canonical 이 달라져 거부합니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "76574a97-fb8a-42b9-a103-44b3793b396e",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "DISCHARGE",
+      "power_w": 300000,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..rln3K54IDMGWb_S15N98Y3GERgBBFVfZ4evILdDgcVVbeoq3m2JbPOuTYJZqhEv7kgfhgtOarCSe-cIEYpGsHw"
+    }
+  }
+}

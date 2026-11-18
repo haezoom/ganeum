@@ -1,0 +1,52 @@
+{
+  "case_id": "IMM-04",
+  "title": "IMMEDIATE — IDLE(완전정지) + soc_max_pct·hold_sec 만 전송, ttl_sec 생략",
+  "mode": "IMMEDIATE",
+  "type1_ttl_sec_present": false,
+  "type2_present": [
+    "soc_max_pct",
+    "hold_sec"
+  ],
+  "type2_absent": [
+    "soc_min_pct",
+    "override_polarity_gap"
+  ],
+  "notes": "power_w=0 이 JCS 에서 0 으로 직렬화되는지, soc_min_pct 없이 soc_max_pct 만 있는 부분 집합이 처리되는지를 봅니다.",
+  "message": {
+    "schema_version": "0.2",
+    "id": "de1ea7e1-796a-43ea-af22-1661e60bd534",
+    "type": "command",
+    "rtu_id": "ESS-1",
+    "event_time": 1781000000900,
+    "ingest_time": 1781000000900,
+    "payload": {
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "key_id": "haezoom-ctrl-test-0001",
+      "direction": "IDLE",
+      "power_w": 0,
+      "soc_max_pct": 90,
+      "hold_sec": 1800,
+      "signature": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ..uarmu9yqcxJ6il48FQ_bH3X2dlvy_YO7UW2cXkws-Gwdla2smN5FpH1SYwwOWE6kAJwB8pJNpH3L3i9TF8C-MA"
+    }
+  },
+  "expected": {
+    "verify": true,
+    "signing_body": {
+      "id": "de1ea7e1-796a-43ea-af22-1661e60bd534",
+      "rtu_id": "ESS-1",
+      "mode": "IMMEDIATE",
+      "issued_at": 1781000000900,
+      "direction": "IDLE",
+      "power_w": 0,
+      "ttl_sec": 120,
+      "soc_max_pct": 90,
+      "hold_sec": 1800
+    },
+    "canonical": "{\"direction\":\"IDLE\",\"hold_sec\":1800,\"id\":\"de1ea7e1-796a-43ea-af22-1661e60bd534\",\"issued_at\":1781000000900,\"mode\":\"IMMEDIATE\",\"power_w\":0,\"rtu_id\":\"ESS-1\",\"soc_max_pct\":90,\"ttl_sec\":120}",
+    "canonical_sha256": "db47e60ed6686b84e699af92a7179cda2a7558659def9f5a06c52c187da577b5",
+    "jws_protected_b64u": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ",
+    "jws_signing_input": "eyJhbGciOiJFUzI1NiIsImtpZCI6ImhhZXpvb20tY3RybC10ZXN0LTAwMDEifQ.eyJkaXJlY3Rpb24iOiJJRExFIiwiaG9sZF9zZWMiOjE4MDAsImlkIjoiZGUxZWE3ZTEtNzk2YS00M2VhLWFmMjItMTY2MWU2MGJkNTM0IiwiaXNzdWVkX2F0IjoxNzgxMDAwMDAwOTAwLCJtb2RlIjoiSU1NRURJQVRFIiwicG93ZXJfdyI6MCwicnR1X2lkIjoiRVNTLTEiLCJzb2NfbWF4X3BjdCI6OTAsInR0bF9zZWMiOjEyMH0",
+    "jws_signature_b64u": "uarmu9yqcxJ6il48FQ_bH3X2dlvy_YO7UW2cXkws-Gwdla2smN5FpH1SYwwOWE6kAJwB8pJNpH3L3i9TF8C-MA"
+  }
+}

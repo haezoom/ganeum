@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/ess/result.schema.json",
+  "allOf": [
+    {
+      "$ref": "common.schema.json#/$defs/header"
+    }
+  ],
+  "properties": {
+    "type": {
+      "const": "result"
+    },
+    "payload": {
+      "type": "object",
+      "required": [
+        "req_id",
+        "result",
+        "target_direction",
+        "target_power_w",
+        "reached_direction",
+        "reached_power_w"
+      ],
+      "properties": {
+        "req_id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+        },
+        "result": {
+          "$ref": "common.schema.json#/$defs/resultState"
+        },
+        "effective_at": {
+          "$ref": "common.schema.json#/$defs/epochMillis"
+        },
+        "target_direction": {
+          "$ref": "common.schema.json#/$defs/direction"
+        },
+        "target_power_w": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reached_direction": {
+          "$ref": "common.schema.json#/$defs/direction"
+        },
+        "reached_power_w": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "soc_pct": {
+          "$ref": "common.schema.json#/$defs/pct"
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "override_polarity_gap": {
+          "type": "boolean",
+          "description": "명령에 override_polarity_gap이 실려 있었으면 그 값을 그대로 되읽기(readback)해 감사 가능하게 합니다. true로 수행한 경우 필수(§7 스키마 밖 규칙)"
+        },
+        "pcs": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "result"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "common.schema.json#/$defs/idString"
+              },
+              "result": {
+                "$ref": "common.schema.json#/$defs/pcsResultState"
+              },
+              "reached_direction": {
+                "$ref": "common.schema.json#/$defs/direction"
+              },
+              "reached_power_w": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "failure_reason": {
+          "$ref": "common.schema.json#/$defs/failureReason"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "PARTIAL",
+                  "FAILURE"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "failure_reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "result": {
+                "enum": [
+                  "SUCCESS",
+                  "PARTIAL"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "effective_at"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

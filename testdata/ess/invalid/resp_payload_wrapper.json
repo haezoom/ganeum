@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.2",
+  "id": "cbaccf7d-afc1-47a7-9919-ad691dc95586",
+  "type": "response",
+  "req_id": "b3f1c2a8-9d4e-4f7a-b1c2-3e5f7a9b0c1d",
+  "rtu_id": "ESS-1",
+  "accepted": true,
+  "result": "IN_PROGRESS",
+  "mode": "IMMEDIATE",
+  "direction": "DISCHARGE",
+  "power_w": 200000,
+  "received_at": 1781000000950,
+  "payload": {}
+}

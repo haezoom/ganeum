@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example/standards/ess/common.schema.json",
+  "$defs": {
+    "epochMillis": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "idString": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,64}$"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "CHARGE",
+        "DISCHARGE",
+        "IDLE"
+      ]
+    },
+    "pct": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "operationMode": {
+      "type": "string",
+      "enum": [
+        "AUTO",
+        "MANUAL",
+        "LOCAL"
+      ],
+      "description": "EMS 운전상태 readback. AUTO=상위 지시·스케줄 자동 수행 / MANUAL=현장 수동 운전 / LOCAL=현장 로컬 제어 중(상위 명령 미적용)"
+    },
+    "bmsCapability": {
+      "type": "string",
+      "enum": [
+        "avail_charge_w",
+        "avail_discharge_w",
+        "rack_total",
+        "rack_online"
+      ],
+      "description": "BMS가 제공 가능한 telemetry battery 항목의 자기신고 코드(= 필드명)"
+    },
+    "failsafeMode": {
+      "type": "string",
+      "enum": [
+        "SCHEDULE_HOLD",
+        "LAST_TARGET_HOLD",
+        "SAFE_STOP"
+      ],
+      "description": "해줌↔EMS 두절 시 기본 거동. SCHEDULE_HOLD=등록 스케줄 지속(기본) / LAST_TARGET_HOLD=마지막 목표 유지 / SAFE_STOP=안전 정지"
+    },
+    "localDate": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+      "description": "tz_offset_min 기준 지역 날짜(YYYY-MM-DD)"
+    },
+    "header": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "id",
+        "type",
+        "rtu_id",
+        "event_time",
+        "ingest_time",
+        "payload"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+$",
+          "description": "MAJOR.MINOR (2요소)"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "description": "메시지 고유 식별자(UUID). format(uuid)과 pattern을 병행 선언해, format 어서션을 무시하는 검증기 설정에서도 pattern으로 형식이 강제되게 합니다(§7). 생성은 소문자 8-4-4-4-12 표기이며 수신 검증은 대소문자 무관입니다(01 §2.4)"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "telemetry",
+            "info",
+            "command",
+            "result"
+          ]
+        },
+        "rtu_id": {
+          "$ref": "#/$defs/idString"
+        },
+        "event_time": {
+          "$ref": "#/$defs/epochMillis"
+        },
+        "ingest_time": {
+          "$ref": "#/$defs/epochMillis"
+        },
+        "seq": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "발신 측 단조 증가 시퀀스(선택)"
+        }
+      }
+    },
+    "pcsStatus": {
+      "type": "string",
+      "enum": [
+        "RUN",
+        "IDLE",
+        "STOP",
+        "FAULT",
+        "UNKNOWN"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "description": "정지·제한 사유. SOC_LIMIT·BMS_PROTECTION·HVAC_FAULT 는 자원 고유 — 배터리 SoC 한계 도달·BMS 보호 동작·공조(HVAC) 고장이라는 ESS에만 존재하는 개념이므로 태양광·풍력 세트의 reason 에는 없습니다(01 §8 공통 계층 규칙). CURTAILMENT 를 포함한 나머지 7종은 세 세트 공통 기본 집합입니다.",
+      "enum": [
+        "PROTECTION_TRIP",
+        "GRID_ABNORMAL",
+        "COMM_LOST",
+        "CURTAILMENT",
+        "SOC_LIMIT",
+        "BMS_PROTECTION",
+        "HVAC_FAULT",
+        "MAINTENANCE",
+        "DEVICE_FAULT",
+        "OTHER"
+      ]
+    },
+    "bmsAlarmCode": {
+      "type": "string",
+      "enum": [
+        "OVER_VOLTAGE",
+        "UNDER_VOLTAGE",
+        "OVER_TEMP",
+        "UNDER_TEMP",
+        "OVER_CURRENT",
+        "CELL_IMBALANCE",
+        "INSULATION",
+        "COMM_LOST",
+        "OTHER"
+      ]
+    },
+    "resultState": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "PARTIAL",
+        "FAILURE"
+      ]
+    },
+    "ackState": {
+      "type": "string",
+      "enum": [
+        "IN_PROGRESS",
+        "FAILURE"
+      ]
+    },
+    "pcsResultState": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "NO_RESPONSE",
+        "FAILURE"
+      ]
+    },
+    "failureReason": {
+      "type": "string",
+      "description": "제어 실패 사유. SOC_LIMIT·BMS_PROTECTION·POWER_LIMIT_EXCEEDED·LOCAL_MODE 4종은 자원 고유입니다 — 앞의 3종은 SoC 한계 위반·BMS 보호 동작·가용 충방전 출력 초과라는 ESS에만 존재하는 개념이고, LOCAL_MODE 는 EMS 로컬(수동) 운전이라는 ESS·풍력에만 존재하는 개념이므로 태양광 세트에는 없습니다(01 §8 공통 계층 규칙). 나머지 10종은 세 세트 공통 기본 집합입니다.",
+      "enum": [
+        "COMM_FAILURE",
+        "RTU_OFFLINE",
+        "RESOURCE_NO_RESPONSE",
+        "PROTECTION_TRIP",
+        "SOC_LIMIT",
+        "BMS_PROTECTION",
+        "POWER_LIMIT_EXCEEDED",
+        "PERMISSION_DENIED",
+        "UNSUPPORTED_CONTROL",
+        "LOCAL_MODE",
+        "PARTIAL_FAILURE",
+        "TIMEOUT",
+        "BAD_REQUEST",
+        "INTERNAL_ERROR"
+      ]
+    }
+  }
+}

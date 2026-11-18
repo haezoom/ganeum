@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.2",
+  "id": "080ce4ca-08e1-48b8-8671-734c4a134516",
+  "type": "info",
+  "rtu_id": "ESS-SMALL-1",
+  "event_time": 1781000000000,
+  "ingest_time": 1781000000040,
+  "payload": {
+    "ems_model": "EMS-100",
+    "firmware": "1.0.3",
+    "control_modes": [
+      "IMMEDIATE"
+    ],
+    "interval_sec": 60,
+    "bms_capabilities": [],
+    "soc_limit_min_pct": 15,
+    "soc_limit_max_pct": 90,
+    "failsafe_mode": "SAFE_STOP",
+    "battery": {
+      "rated_energy_wh": 12000
+    },
+    "pcs": [
+      {
+        "id": "PCS-1",
+        "rated_power_w": 6000
+      }
+    ]
+  }
+}
